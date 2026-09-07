@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kulzzy Chat Admin</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #06132d;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* LOGIN */
+
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: #0a1d40;
+    border: 1px solid rgba(255,215,0,.25);
+    border-radius: 18px;
+    padding: 25px 20px;
+    text-align: center;
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: #ffd700;
+    color: #06132d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 23px;
+}
+
+.subtitle {
+    color: #aeb8cb;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: #06132d;
+    color: white;
+    outline: none;
+}
+
+.input:focus {
+    border-color: #ffd700;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 10px;
+    background: #ffd700;
+    color: #06132d;
+    font-weight: bold;
+}
+
+.error {
+    color: #ff8d8d;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* ADMIN */
+
+.admin {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    height: 64px;
+    background: #071a3d;
+    border-bottom: 1px solid rgba(255,215,0,.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    flex-shrink: 0;
+}
+
+.brand {
+    font-weight: bold;
+}
+
+.brand span {
+    display: block;
+    color: #ffd700;
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.logout {
+    border: 1px solid rgba(255,215,0,.3);
+    background: transparent;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+/* BODY */
+
+.admin-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+/* USERS */
+
+.users-panel {
+    width: 330px;
+    background: #081a39;
+    border-right: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-heading {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.panel-heading strong {
+    font-size: 15px;
+}
+
+.stats {
+    color: #aeb8cb;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.user-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 13px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    cursor: pointer;
+}
+
+.user-item:hover,
+.user-item.active {
+    background: #102956;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.user-code {
+    color: #ffd700;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.user-phone {
+    color: #8f9db4;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.user-time {
+    color: #73819a;
+    font-size: 9px;
+    margin-top: 5px;
+}
+
+/* CHAT */
+
+.chat-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-heading {
+    min-height: 64px;
+    background: #071a3d;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 12px 15px;
+}
+
+.chat-user-name {
+    font-weight: bold;
+}
+
+.chat-user-code {
+    color: #ffd700;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.no-chat {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #8997ad;
+}
+
+.message-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.message-row.admin {
+    justify-content: flex-end;
+}
+
+.message-row.user {
+    justify-content: flex-start;
+}
+
+.message {
+    max-width: 75%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #102956;
+}
+
+.message-row.admin .message {
+    background: #174d42;
+}
+
+.sender {
+    color: #ffd700;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.media {
+    display: block;
+    max-width: 280px;
+    width: 100%;
+    border-radius: 9px;
+    margin-bottom: 7px;
+}
+
+.message-time {
+    color: #9aa8bd;
+    font-size: 9px;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* COMPOSER */
+
+.composer {
+    background: #071a3d;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 10px;
+}
+
+.composer-row {
+    display: flex;
+    gap: 8px;
+}
+
+.attach {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,215,0,.3);
+    background: #0d2751;
+    color: #ffd700;
+    font-size: 19px;
+}
+
+.message-input {
+    flex: 1;
+    min-width: 0;
+    height: 45px;
+    border-radius: 23px;
+    padding: 0 15px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: #06132d;
+    color: white;
+    outline: none;
+}
+
+.send {
+    width: 45px;
+    height: 45px;
+    border: 0;
+    border-radius: 50%;
+    background: #ffd700;
+    color: #06132d;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+
+    .users-panel {
+        width: 100%;
+    }
+
+    .chat-panel {
+        display: none;
+    }
+
+    .users-panel.mobile-hidden {
+        display: none;
+    }
+
+    .chat-panel.mobile-visible {
+        display: flex;
+    }
+
+    .mobile-back {
+        display: inline-block !important;
+    }
+
+}
+
+.mobile-back {
+    display: none;
+    margin-right: 8px;
+    background: transparent;
+    border: 0;
+    color: white;
+    font-size: 24px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<section id="loginScreen" class="login-screen">
+
+    <div class="login-box">
+
+        <div class="logo">K</div>
+
+        <h1>👑 KULZZY CHAT ADMIN</h1>
+
+        <div class="subtitle">
+            Private administrator access
+        </div>
+
+        <input
+            id="emailInput"
+            class="input"
+            type="email"
+            placeholder="Admin email"
+            autocomplete="username"
+        >
+
+        <input
+            id="passwordInput"
+            class="input"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
+
+        <button
+            id="loginBtn"
+            class="primary-btn"
+        >
+            LOGIN
+        </button>
+
+        <div id="loginError" class="error"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="adminScreen" class="admin hidden">
+
+    <header class="topbar">
+
+        <div class="brand">
+            👑 KULZZY CHAT ADMIN
+            <span>Private customer conversations</span>
+        </div>
+
+        <button
+            id="logoutBtn"
+            class="logout"
+        >
+            LOGOUT
+        </button>
+
+    </header>
+
+
+    <div class="admin-body">
+
+        <!-- USER LIST -->
+
+        <aside
+            id="usersPanel"
+            class="users-panel"
+        >
+
+            <div class="panel-heading">
+
+                <strong>
+                    💬 Conversations
+                </strong>
+
+                <div
+                    id="stats"
+                    class="stats"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+            <div
+                id="userList"
+                class="user-list"
+            ></div>
+
+        </aside>
+
+
+        <!-- CHAT -->
+
+        <main
+            id="chatPanel"
+            class="chat-panel"
+        >
+
+            <div class="chat-heading">
+
+                <button
+                    id="mobileBack"
+                    class="mobile-back"
+                >
+                    ‹
+                </button>
+
+                <div
+                    id="chatUserName"
+                    class="chat-user-name"
+                >
+                    Select a conversation
+                </div>
+
+                <div
+                    id="chatUserCode"
+                    class="chat-user-code"
+                ></div>
+
+            </div>
+
+
+            <div
+                id="chatMessages"
+                class="chat-messages"
+            >
+
+                <div class="no-chat">
+                    Select a user to view their conversation.
+                </div>
+
+            </div>
+
+
+            <div
+                id="composer"
+                class="composer hidden"
+            >
+
+                <div class="composer-row">
+
+                    <button
+                        id="attachBtn"
+                        class="attach"
+                    >
+                        📎
+                    </button>
+
+                    <input
+                        id="fileInput"
+                        type="file"
+                        accept="image/*,video/*"
+                        style="display:none;"
+                    >
+
+                    <input
+                        id="messageInput"
+                        class="message-input"
+                        type="text"
+                        maxlength="2000"
+                        placeholder="Reply to user..."
+                    >
+
+                    <button
+                        id="sendBtn"
+                        class="send"
+                    >
+                        ➤
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</section>
+
+
+<script type="module">
+
+/* ==========================================================
+   FIREBASE
+========================================================== */
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    push,
+    onValue,
+    onChildAdded,
+    query,
+    orderByChild,
+    limitToLast
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+
+/* ==========================================================
+   FIREBASE CONFIG
+========================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDsCePNnY6LeQot30HuXFo2F36v6eD7n3k",
+
+    authDomain:
+        "kulzzy-chat.firebaseapp.com",
+
+    databaseURL:
+        "https://kulzzy-chat-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+        "kulzzy-chat",
+
+    storageBucket:
+        "kulzzy-chat.firebasestorage.app",
+
+    messagingSenderId:
+        "780479389980",
+
+    appId:
+        "1:780479389980:web:39c5c35bca1a673a5cdad9",
+
+    measurementId:
+        "G-CZMLV3SRPS"
+
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const auth =
+    getAuth(app);
+
+const db =
+    getDatabase(app);
+
+
+/* ==========================================================
+   CLOUDINARY
+========================================================== */
+
+const CLOUDINARY_CLOUD_NAME =
+    "s4j0x7dk";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "kulzzy_chat";
+
+
+/* ==========================================================
+   ELEMENTS
+========================================================== */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const adminScreen =
+    document.getElementById("adminScreen");
+
+const emailInput =
+    document.getElementById("emailInput");
+
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const loginError =
+    document.getElementById("loginError");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const userList =
+    document.getElementById("userList");
+
+const stats =
+    document.getElementById("stats");
+
+const chatUserName =
+    document.getElementById("chatUserName");
+
+const chatUserCode =
+    document.getElementById("chatUserCode");
+
+const chatMessages =
+    document.getElementById("chatMessages");
+
+const composer =
+    document.getElementById("composer");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendBtn =
+    document.getElementById("sendBtn");
+
+const attachBtn =
+    document.getElementById("attachBtn");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const usersPanel =
+    document.getElementById("usersPanel");
+
+const chatPanel =
+    document.getElementById("chatPanel");
+
+const mobileBack =
+    document.getElementById("mobileBack");
+
+
+/* ==========================================================
+   VARIABLES
+========================================================== */
+
+let selectedUser = null;
+
+let selectedFile = null;
+
+let conversationUnsubscribe = null;
+
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+loginBtn.addEventListener(
+    "click",
+    async () => {
+
+        loginError.textContent = "";
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        if (!email || !password) {
+
+            loginError.textContent =
+                "Enter your email and password.";
+
+            return;
+        }
+
+        try {
+
+            loginBtn.disabled = true;
+
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            loginError.textContent =
+                firebaseLoginError(error);
+
+            loginBtn.disabled = false;
+        }
+
+    }
+);
+
+
+/* ==========================================================
+   AUTH STATE
+========================================================== */
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        if (user) {
+
+            showAdmin();
+
+        } else {
+
+            showLogin();
+
+        }
+
+    }
+);
+
+
+/* ==========================================================
+   SHOW LOGIN
+========================================================== */
+
+function showLogin() {
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+    adminScreen.classList.add(
+        "hidden"
+    );
+
+}
+
+
+/* ==========================================================
+   SHOW ADMIN
+========================================================== */
+
+function showAdmin() {
+
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    adminScreen.classList.remove(
+        "hidden"
+    );
+
+    loadUsers();
+
+}
+
+
+/* ==========================================================
+   LOGOUT
+========================================================== */
+
+logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+        await signOut(auth);
+
+    }
+);
+
+
+/* ==========================================================
+   LOAD USERS
+========================================================== */
+
+function loadUsers() {
+
+    const usersRef =
+        ref(
+            db,
+            "users"
+        );
+
+    onValue(
+        usersRef,
+        (snapshot) => {
+
+            userList.innerHTML = "";
+
+            if (!snapshot.exists()) {
+
+                stats.textContent =
+                    "0 conversations";
+
+                return;
+
+            }
+
+            const users =
+                snapshot.val();
+
+            const entries =
+                Object.entries(users);
+
+            stats.textContent =
+                entries.length +
+                " conversation" +
+                (entries.length === 1 ? "" : "s");
+
+
+            /*
+               Newest users first
+            */
+
+            entries.sort(
+                (a, b) =>
+                    (b[1].createdAt || 0) -
+                    (a[1].createdAt || 0)
+            );
+
+
+            entries.forEach(
+                ([uid, user]) => {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "user-item";
+
+                    item.dataset.uid =
+                        uid;
+
+
+                    const name =
+                        document.createElement(
+                            "div"
+                        );
+
+                    name.className =
+                        "user-name";
+
+                    name.textContent =
+                        user.name ||
+                        "Unnamed user";
+
+
+                    const code =
+                        document.createElement(
+                            "div"
+                        );
+
+                    code.className =
+                        "user-code";
+
+                    code.textContent =
+                        user.chatCode ||
+                        "";
+
+
+                    const phone =
+                        document.createElement(
+                            "div"
+                        );
+
+                    phone.className =
+                        "user-phone";
+
+                    phone.textContent =
+                        user.phone ||
+                        "";
+
+
+                    const time =
+                        document.createElement(
+                            "div"
+                        );
+
+                    time.className =
+                        "user-time";
+
+                    time.textContent =
+                        user.createdAt
+                            ? formatDate(
+                                user.createdAt
+                              )
+                            : "";
+
+
+                    item.appendChild(name);
+
+                    item.appendChild(code);
+
+                    item.appendChild(phone);
+
+                    item.appendChild(time);
+
+
+                    item.addEventListener(
+                        "click",
+                        () => {
+
+                            openConversation(
+                                uid,
+                                user
+                            );
+
+                        }
+                    );
+
+
+                    userList.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* ==========================================================
+   OPEN CONVERSATION
+========================================================== */
+
+function openConversation(
+    uid,
+    user
+) {
+
+    selectedUser = {
+
+        uid: uid,
+
+        ...user
+
+    };
+
+
+    document
+        .querySelectorAll(
+            ".user-item"
+        )
+        .forEach(
+            item =>
+                item.classList.remove(
+                    "active"
+                )
+        );
+
+
+    const selected =
+        document.querySelector(
+            '[data-uid="' +
+            uid +
+            '"]'
+        );
+
+    if (selected) {
+
+        selected.classList.add(
+            "active"
+        );
+
+    }
+
+
+    chatUserName.textContent =
+        user.name ||
+        "User";
+
+    chatUserCode.textContent =
+        user.chatCode ||
+        "";
+
+
+    composer.classList.remove(
+        "hidden"
+    );
+
+
+    chatMessages.innerHTML = "";
+
+
+    /*
+       Mobile view
+    */
+
+    usersPanel.classList.add(
+        "mobile-hidden"
+    );
+
+    chatPanel.classList.add(
+        "mobile-visible"
+    );
+
+
+    /*
+       Remove old listener
+    */
+
+    if (conversationUnsubscribe) {
+
+        conversationUnsubscribe();
+
+        conversationUnsubscribe = null;
+
+    }
+
+
+    const messagesRef =
+        ref(
+            db,
+            "conversations/" +
+            uid +
+            "/messages"
+        );
+
+
+    const messagesQuery =
+        query(
+            messagesRef,
+            orderByChild("createdAt"),
+            limitToLast(100)
+        );
+
+
+    let firstMessage = true;
+
+
+    conversationUnsubscribe =
+        onChildAdded(
+            messagesQuery,
+            (snapshot) => {
+
+                renderAdminMessage(
+                    snapshot.key,
+                    snapshot.val()
+                );
+
+                if (firstMessage) {
+
+                    firstMessage = false;
+
+                }
+
+            }
+        );
+
+}
+
+
+/* ==========================================================
+   RENDER ADMIN MESSAGE
+========================================================== */
+
+function renderAdminMessage(
+    id,
+    data
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    const isAdmin =
+        data.isAdmin === true ||
+        data.senderUid === auth.currentUser?.uid;
+
+
+    row.className =
+        "message-row " +
+        (isAdmin
+            ? "admin"
+            : "user");
+
+
+    const box =
+        document.createElement(
+            "div"
+        );
+
+    box.className =
+        "message";
+
+
+    const sender =
+        document.createElement(
+            "div"
+        );
+
+    sender.className =
+        "sender";
+
+    sender.textContent =
+        isAdmin
+            ? "👑 Kulzzy Radio"
+            : (
+                data.senderName ||
+                selectedUser?.name ||
+                "User"
+              );
+
+
+    box.appendChild(sender);
+
+
+    /*
+       Media
+    */
+
+    if (data.mediaUrl) {
+
+        if (
+            data.mediaType &&
+            data.mediaType.startsWith(
+                "video/"
+            )
+        ) {
+
+            const video =
+                document.createElement(
+                    "video"
+                );
+
+            video.className =
+                "media";
+
+            video.src =
+                data.mediaUrl;
+
+            video.controls =
+                true;
+
+            video.playsInline =
+                true;
+
+            box.appendChild(
+                video
+            );
+
+        } else {
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+            image.className =
+                "media";
+
+            image.src =
+                data.mediaUrl;
+
+            image.alt =
+                "Chat image";
+
+            box.appendChild(
+                image
+            );
+
+        }
+
+    }
+
+
+    /*
+       Text
+    */
+
+    if (data.text) {
+
+        const text =
+            document.createElement(
+                "div"
+            );
+
+        text.className =
+            "message-text";
+
+        text.textContent =
+            data.text;
+
+        box.appendChild(text);
+
+    }
+
+
+    /*
+       Time
+    */
+
+    const time =
+        document.createElement(
+            "div"
+        );
+
+    time.className =
+        "message-time";
+
+    time.textContent =
+        formatTime(
+            data.createdAt
+        );
+
+    box.appendChild(time);
+
+
+    row.appendChild(box);
+
+    chatMessages.appendChild(row);
+
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+
+}
+
+
+/* ==========================================================
+   SEND ADMIN MESSAGE
+========================================================== */
+
+sendBtn.addEventListener(
+    "click",
+    sendAdminMessage
+);
+
+
+messageInput.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            sendAdminMessage();
+
+        }
+
+    }
+);
+
+
+async function sendAdminMessage() {
+
+    if (
+        !selectedUser ||
+        !auth.currentUser
+    ) {
+
+        return;
+
+    }
+
+
+    const text =
+        messageInput.value.trim();
+
+
+    if (!text && !selectedFile) {
+
+        return;
+
+    }
+
+
+    try {
+
+        sendBtn.disabled = true;
+
+        attachBtn.disabled = true;
+
+
+        let mediaUrl = "";
+
+        let mediaType = "";
+
+
+        /*
+           Cloudinary upload
+        */
+
+        if (selectedFile) {
+
+            const result =
+                await uploadToCloudinary(
+                    selectedFile
+                );
+
+            mediaUrl =
+                result.secure_url;
+
+            mediaType =
+                selectedFile.type;
+
+        }
+
+
+        const message = {
+
+            senderUid:
+                auth.currentUser.uid,
+
+            senderName:
+                "Kulzzy Radio",
+
+            isAdmin:
+                true,
+
+            text:
+                text || "",
+
+            mediaUrl:
+                mediaUrl,
+
+            mediaType:
+                mediaType,
+
+            createdAt:
+                Date.now()
+
+        };
+
+
+        const messageRef =
+            push(
+                ref(
+                    db,
+                    "conversations/" +
+                    selectedUser.uid +
+                    "/messages"
+                )
+            );
+
+
+        await set(
+            messageRef,
+            message
+        );
+
+
+        messageInput.value = "";
+
+        selectedFile = null;
+
+        fileInput.value = "";
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to send message."
+        );
+
+    } finally {
+
+        sendBtn.disabled = false;
+
+        attachBtn.disabled = false;
+
+    }
+
+}
+
+
+/* ==========================================================
+   CLOUDINARY
+========================================================== */
+
+attachBtn.addEventListener(
+    "click",
+    () => {
+
+        fileInput.click();
+
+    }
+);
+
+
+fileInput.addEventListener(
+    "change",
+    () => {
+
+        selectedFile =
+            fileInput.files[0] ||
+            null;
+
+        if (!selectedFile) {
+            return;
+        }
+
+
+        const maxSize =
+            25 * 1024 * 1024;
+
+
+        if (
+            selectedFile.size >
+            maxSize
+        ) {
+
+            alert(
+                "File must be smaller than 25MB."
+            );
+
+            selectedFile = null;
+
+            fileInput.value = "";
+
+            return;
+
+        }
+
+
+        if (
+            !selectedFile.type.startsWith(
+                "image/"
+            ) &&
+            !selectedFile.type.startsWith(
+                "video/"
+            )
+        ) {
+
+            alert(
+                "Only pictures and videos are allowed."
+            );
+
+            selectedFile = null;
+
+            fileInput.value = "";
+
+        }
+
+    }
+);
+
+
+async function uploadToCloudinary(
+    file
+) {
+
+    const url =
+        "https://api.cloudinary.com/v1_1/" +
+        CLOUDINARY_CLOUD_NAME +
+        "/auto/upload";
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "upload_preset",
+        CLOUDINARY_UPLOAD_PRESET
+    );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Cloudinary upload failed."
+        );
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+/* ==========================================================
+   MOBILE BACK
+========================================================== */
+
+mobileBack.addEventListener(
+    "click",
+    () => {
+
+        usersPanel.classList.remove(
+            "mobile-hidden"
+        );
+
+        chatPanel.classList.remove(
+            "mobile-visible"
+        );
+
+    }
+);
+
+
+/* ==========================================================
+   HELPERS
+========================================================== */
+
+function formatTime(
+    timestamp
+) {
+
+    if (!timestamp) {
+        return "";
+    }
+
+    return new Date(
+        timestamp
+    ).toLocaleTimeString(
+        [],
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+function formatDate(
+    timestamp
+) {
+
+    return new Date(
+        timestamp
+    ).toLocaleDateString(
+        [],
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function firebaseLoginError(
+    error
+) {
+
+    switch (
+        error?.code
+    ) {
+
+        case "auth/invalid-credential":
+            return "Incorrect email or password.";
+
+        case "auth/invalid-email":
+            return "Invalid email address.";
+
+        case "auth/user-disabled":
+            return "This admin account has been disabled.";
+
+        case "auth/too-many-requests":
+            return "Too many login attempts. Try again later.";
+
+        default:
+            return "Unable to login. Please check your details.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
