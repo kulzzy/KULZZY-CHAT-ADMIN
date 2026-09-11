@@ -1,0 +1,3596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Kulzzy Chat Admin</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#061426;
+    color:#fff;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* LOGIN */
+
+#loginScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:
+        radial-gradient(circle at top,#102b4d 0,#061426 55%);
+}
+
+.login-box{
+    width:100%;
+    max-width:430px;
+    background:#0b1d33;
+    border:1px solid rgba(255,215,0,.35);
+    border-radius:18px;
+    padding:30px 24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.login-box h1{
+    text-align:center;
+    color:#ffd700;
+    margin:0 0 8px;
+    font-size:27px;
+}
+
+.login-box p{
+    text-align:center;
+    color:#9eb0c5;
+    margin:0 0 25px;
+}
+
+.login-box input{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    border-radius:10px;
+    border:1px solid #28415f;
+    background:#071629;
+    color:#fff;
+    outline:none;
+}
+
+.login-box input:focus{
+    border-color:#ffd700;
+}
+
+.login-box button{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#ffd700;
+    color:#071629;
+    font-weight:bold;
+    font-size:15px;
+}
+
+#loginError{
+    color:#ff7777;
+    text-align:center;
+    margin-top:12px;
+    min-height:20px;
+}
+
+/* ADMIN */
+
+#adminScreen{
+    min-height:100vh;
+}
+
+.header{
+    height:65px;
+    background:#081a30;
+    border-bottom:1px solid rgba(255,215,0,.25);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.header h1{
+    margin:0;
+    color:#ffd700;
+    font-size:20px;
+}
+
+.header-right{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.logout-btn{
+    border:1px solid #633;
+    background:#2a1111;
+    color:#ff8c8c;
+    padding:9px 13px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+/* MAIN */
+
+.main{
+    display:grid;
+    grid-template-columns:340px 1fr;
+    height:calc(100vh - 65px);
+}
+
+/* USERS */
+
+.users-panel{
+    background:#081a2e;
+    border-right:1px solid rgba(255,215,0,.18);
+    overflow-y:auto;
+}
+
+.users-header{
+    padding:17px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.users-header h2{
+    margin:0 0 5px;
+    color:#ffd700;
+    font-size:18px;
+}
+
+#stats{
+    color:#7f94aa;
+    font-size:13px;
+}
+
+.user-list{
+    padding:10px;
+}
+
+.user-card{
+    padding:13px;
+    border-radius:11px;
+    background:#0c2139;
+    margin-bottom:8px;
+    border:1px solid transparent;
+    cursor:pointer;
+}
+
+.user-card:hover{
+    border-color:rgba(255,215,0,.3);
+}
+
+.user-card.active{
+    border-color:#ffd700;
+    background:#102b49;
+}
+
+.user-name{
+    font-weight:bold;
+    color:#fff;
+    margin-bottom:5px;
+}
+
+.user-phone{
+    color:#8298ae;
+    font-size:12px;
+}
+
+.user-code{
+    color:#ffd700;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.empty-users{
+    text-align:center;
+    padding:30px 15px;
+    color:#718399;
+}
+
+/* CHAT */
+
+.chat-panel{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    background:#061426;
+}
+
+.chat-header{
+    height:65px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    padding:0 18px;
+    gap:12px;
+    background:#091c32;
+}
+
+.mobile-back{
+    display:none;
+    border:0;
+    background:#132b46;
+    color:#fff;
+    border-radius:8px;
+    padding:8px 11px;
+}
+
+.chat-user-info{
+    min-width:0;
+}
+
+.chat-user-name{
+    font-weight:bold;
+    color:#fff;
+    font-size:17px;
+}
+
+.chat-user-code{
+    color:#ffd700;
+    font-size:12px;
+    margin-top:3px;
+}
+
+.chat-messages{
+    flex:1;
+    overflow-y:auto;
+    padding:18px;
+}
+
+.no-chat{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#6e8298;
+}
+
+/* MESSAGES */
+
+.message{
+    display:flex;
+    margin-bottom:12px;
+}
+
+.message.admin{
+    justify-content:flex-end;
+}
+
+.message-bubble{
+    max-width:min(75%,600px);
+    padding:10px 13px;
+    border-radius:13px;
+    background:#10243b;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.message.admin .message-bubble{
+    background:#5c4d00;
+    border-color:rgba(255,215,0,.25);
+}
+
+.message-name{
+    color:#ffd700;
+    font-size:11px;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
+.message-text{
+    white-space:pre-wrap;
+    word-break:break-word;
+    line-height:1.45;
+}
+
+.message-time{
+    font-size:10px;
+    color:#8294a8;
+    margin-top:5px;
+    text-align:right;
+}
+
+.message-media{
+    display:block;
+    max-width:100%;
+    max-height:330px;
+    border-radius:9px;
+    margin-top:5px;
+    cursor:pointer;
+}
+
+.message-video{
+    width:100%;
+    max-height:330px;
+    border-radius:9px;
+    margin-top:5px;
+    background:#000;
+}
+
+.message-audio{
+    width:100%;
+    min-width:220px;
+    max-width:330px;
+    margin-top:6px;
+}
+
+.message-media-label{
+    color:#ffd700;
+    font-size:11px;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.message-reply{
+    border-left:3px solid #ffd700;
+    background:rgba(0,0,0,.18);
+    border-radius:7px;
+    padding:6px 8px;
+    margin-bottom:8px;
+    color:#b9c6d5;
+    font-size:11px;
+}
+
+.message-reply strong{
+    color:#ffd700;
+    display:block;
+    margin-bottom:2px;
+}
+
+/* COMPOSER */
+
+.composer{
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:12px;
+    background:#081a2e;
+}
+
+.reply-box{
+    display:none;
+    background:#102b45;
+    border-left:4px solid #ffd700;
+    padding:8px 10px;
+    border-radius:7px;
+    margin-bottom:8px;
+    position:relative;
+}
+
+.reply-box.show{
+    display:block;
+}
+
+.reply-label{
+    color:#ffd700;
+    font-size:11px;
+    font-weight:bold;
+}
+
+#replyText{
+    color:#c7d2de;
+    font-size:12px;
+    margin-top:3px;
+    padding-right:30px;
+}
+
+.close-reply{
+    position:absolute;
+    right:7px;
+    top:5px;
+    border:0;
+    background:transparent;
+    color:#fff;
+    font-size:17px;
+}
+
+.composer-row{
+    display:flex;
+    gap:8px;
+    align-items:stretch;
+}
+
+#messageInput{
+    flex:1;
+    min-width:0;
+    resize:none;
+    height:45px;
+    border:1px solid #263f5b;
+    background:#061426;
+    color:#fff;
+    border-radius:10px;
+    padding:12px;
+    outline:none;
+}
+
+#messageInput:focus{
+    border-color:#ffd700;
+}
+
+.attach-btn,
+.voice-btn,
+.send-btn{
+    border:0;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.attach-btn{
+    background:#173552;
+    color:#fff;
+    width:48px;
+    min-width:48px;
+    font-size:18px;
+}
+
+.voice-btn{
+    background:#173552;
+    color:#ffd700;
+    width:48px;
+    min-width:48px;
+    font-size:18px;
+}
+
+.voice-btn.recording{
+    background:#651515;
+    color:#ff6b6b;
+    border:1px solid #ff3333;
+}
+
+.send-btn{
+    background:#ffd700;
+    color:#071629;
+    padding:0 15px;
+    min-width:70px;
+}
+
+.file-preview{
+    display:none;
+    margin-top:8px;
+    padding:8px;
+    background:#10243a;
+    border-radius:8px;
+    color:#c4d0dc;
+    font-size:12px;
+}
+
+.file-preview.show{
+    display:block;
+}
+
+.recording-status{
+    display:none;
+    margin-top:8px;
+    padding:8px 10px;
+    background:#300c12;
+    border:1px solid rgba(255,40,40,.55);
+    border-radius:8px;
+    color:#ff6b6b;
+    font-size:12px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.recording-status.show{
+    display:block;
+}
+
+#fileInput{
+    display:none;
+}
+
+/* ANNOUNCEMENT */
+
+.announcement-panel{
+    margin:14px;
+    background:#0a2038;
+    border:1px solid rgba(255,215,0,.25);
+    border-radius:14px;
+    padding:15px;
+}
+
+.announcement-title{
+    color:#ffd700;
+    font-weight:bold;
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.announcement-subtitle{
+    color:#8298ae;
+    font-size:12px;
+    margin-bottom:12px;
+}
+
+.announcement-panel textarea{
+    width:100%;
+    min-height:90px;
+    resize:vertical;
+    border-radius:9px;
+    border:1px solid #28415f;
+    background:#061426;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+.announcement-panel textarea:focus{
+    border-color:#ffd700;
+}
+
+.announcement-actions{
+    display:flex;
+    gap:8px;
+    margin-top:9px;
+}
+
+.announcement-attach{
+    border:0;
+    background:#173552;
+    color:#fff;
+    border-radius:9px;
+    padding:11px 13px;
+}
+
+.announcement-send{
+    border:0;
+    background:#ffd700;
+    color:#071629;
+    border-radius:9px;
+    padding:11px 16px;
+    font-weight:bold;
+}
+
+.announcement-file{
+    display:none;
+    color:#c6d3df;
+    font-size:12px;
+    margin-top:7px;
+}
+
+.announcement-file.show{
+    display:block;
+}
+
+.loading{
+    opacity:.6;
+    pointer-events:none;
+}
+
+@media(max-width:800px){
+
+    .main{
+        grid-template-columns:1fr;
+        position:relative;
+    }
+
+    .users-panel{
+        position:absolute;
+        inset:0;
+        z-index:10;
+    }
+
+    .chat-panel{
+        display:none;
+        height:calc(100vh - 65px);
+    }
+
+    .chat-panel.mobile-open{
+        display:flex;
+    }
+
+    .mobile-back{
+        display:block;
+    }
+
+    .message-bubble{
+        max-width:85%;
+    }
+
+    .header h1{
+        font-size:16px;
+    }
+
+    .announcement-panel{
+        margin:10px;
+    }
+}
+
+@media(max-width:500px){
+
+    .header{
+        padding:0 10px;
+    }
+
+    .header h1{
+        font-size:14px;
+    }
+
+    .logout-btn{
+        padding:7px 9px;
+        font-size:11px;
+    }
+
+    .chat-header{
+        padding:0 10px;
+    }
+
+    .chat-messages{
+        padding:10px;
+    }
+
+    .composer{
+        padding:8px;
+    }
+
+    .composer-row{
+        gap:5px;
+    }
+
+    .attach-btn,
+    .voice-btn{
+        width:42px;
+        min-width:42px;
+        padding:0;
+    }
+
+    .send-btn{
+        padding:0 10px;
+        min-width:62px;
+    }
+
+    .announcement-actions{
+        flex-direction:column;
+    }
+
+    .announcement-attach,
+    .announcement-send{
+        width:100%;
+    }
+
+    .message-audio{
+        min-width:190px;
+        max-width:260px;
+    }
+
+}
+
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<script>
+
+window.OneSignalDeferred =
+    window.OneSignalDeferred || [];
+
+OneSignalDeferred.push(
+    async function(OneSignal){
+
+        try{
+
+            await OneSignal.init({
+
+                appId:
+                    "cd457ce6-826f-44f7-b653-c371feb790b6",
+
+                safari_web_id:
+                    "web.onesignal.auto.15375e9b-dec0-4164-84de-dd8ada8f8fb7",
+
+                notifyButton:{
+                    enable:true
+                }
+
+            });
+
+        }catch(error){
+
+            console.error(
+                "OneSignal initialization error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+</head>
+
+<body>
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <h1>🔐 KULZZY CHAT ADMIN</h1>
+
+        <p>Private Chat Management</p>
+
+        <input
+            id="emailInput"
+            type="email"
+            autocomplete="username"
+            placeholder="Admin Email">
+
+        <input
+            id="passwordInput"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Admin Password">
+
+        <button id="loginBtn">
+            🔐 LOGIN
+        </button>
+
+        <div id="loginError"></div>
+
+    </div>
+
+</div>
+
+<div id="adminScreen" class="hidden">
+
+    <div class="header">
+
+        <h1>🎙️ KULZZY CHAT ADMIN</h1>
+
+        <div class="header-right">
+
+            <button id="logoutBtn" class="logout-btn">
+                🚪 LOGOUT
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="main">
+
+        <div id="usersPanel" class="users-panel">
+
+            <div class="users-header">
+
+                <h2>👥 USERS</h2>
+
+                <div id="stats">
+                    Loading users...
+                </div>
+
+            </div>
+
+            <div id="userList" class="user-list">
+
+                <div class="empty-users">
+                    Loading users...
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="chatPanel" class="chat-panel">
+
+            <div class="chat-header">
+
+                <button id="mobileBack" class="mobile-back">
+                    ←
+                </button>
+
+                <div class="chat-user-info">
+
+                    <div
+                        id="chatUserName"
+                        class="chat-user-name">
+                        Select a user
+                    </div>
+
+                    <div
+                        id="chatUserCode"
+                        class="chat-user-code">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="announcement-panel">
+
+                <div class="announcement-title">
+                    📢 GENERAL ANNOUNCEMENT
+                </div>
+
+                <div class="announcement-subtitle">
+                    Send an announcement to all subscribed Kulzzy Chat users.
+                    The announcement will also appear inside each user's private chat.
+                </div>
+
+                <textarea
+                    id="announcementInput"
+                    placeholder="Write your announcement here..."></textarea>
+
+                <div
+                    id="announcementFile"
+                    class="announcement-file">
+                </div>
+
+                <div class="announcement-actions">
+
+                    <button
+                        id="announcementAttachBtn"
+                        class="announcement-attach">
+                        📎 PICTURE / VIDEO
+                    </button>
+
+                    <button
+                        id="announcementSendBtn"
+                        class="announcement-send">
+                        📢 SEND TO EVERYONE
+                    </button>
+
+                </div>
+
+                <input
+                    id="announcementFileInput"
+                    type="file"
+                    accept="image/*,video/*"
+                    hidden>
+
+            </div>
+
+            <div
+                id="chatMessages"
+                class="chat-messages">
+
+                <div class="no-chat">
+                    Select a user to open their private conversation.
+                </div>
+
+            </div>
+
+            <div
+                id="composer"
+                class="composer hidden">
+
+                <div
+                    id="replyBox"
+                    class="reply-box">
+
+                    <button
+                        id="closeReplyBtn"
+                        class="close-reply">
+                        ×
+                    </button>
+
+                    <div class="reply-label">
+                        REPLYING TO
+                    </div>
+
+                    <div id="replyText"></div>
+
+                </div>
+
+                <div
+                    id="filePreview"
+                    class="file-preview">
+                </div>
+
+                <div
+                    id="recordingStatus"
+                    class="recording-status">
+
+                    🔴 Recording voice note...
+                    Tap 🎙️ again to stop and send.
+
+                </div>
+
+                <div class="composer-row">
+
+                    <button
+                        id="attachBtn"
+                        class="attach-btn"
+                        aria-label="Picture or video">
+                        📎
+                    </button>
+
+                    <button
+                        id="voiceBtn"
+                        class="voice-btn"
+                        aria-label="Voice note">
+                        🎙️
+                    </button>
+
+                    <textarea
+                        id="messageInput"
+                        placeholder="Write a message..."></textarea>
+
+                    <button
+                        id="sendBtn"
+                        class="send-btn">
+                        SEND
+                    </button>
+
+                </div>
+
+                <input
+                    id="fileInput"
+                    type="file"
+                    accept="image/*,video/*">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDsCePNnY6LeQot2F36v6eD7n3k",
+
+    authDomain:
+        "kulzzy-chat.firebaseapp.com",
+
+    databaseURL:
+        "https://kulzzy-chat-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+        "kulzzy-chat",
+
+    storageBucket:
+        "kulzzy-chat.firebasestorage.app",
+
+    messagingSenderId:
+        "780479389980",
+
+    appId:
+        "1:780479389980:web:39c5c35bca1a673a5cdad9",
+
+    measurementId:
+        "G-CZMLV3SRPS"
+
+};
+
+if(!firebase.apps.length){
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+}
+
+const auth =
+    firebase.auth();
+
+const database =
+    firebase.database();
+
+const ADMIN_UID =
+    "nP50TPvRNZPWt2sFyT13r0qEWhb2";
+
+const CLOUDINARY_CLOUD_NAME =
+    "s4j0x7dk";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "kulzzy_chat";
+
+const CLOUDINARY_UPLOAD_URL =
+    "https://api.cloudinary.com/v1_1/s4j0x7dk/auto/upload";
+
+const NOTIFICATION_SERVER_URL =
+    "https://script.google.com/macros/s/AKfycbyBN2WnT0FZiClPl-by7lgGfAaBEVVhKIbMQqZ3reD6L3qdlE-jhryTMIkO69se_W0u/exec";
+
+let selectedUser = null;
+
+let selectedFile = null;
+
+let announcementFile = null;
+
+let conversationUnsubscribe = null;
+
+let usersListener = null;
+
+let replyingTo = null;
+
+let voiceRecorder = null;
+
+let voiceStream = null;
+
+let voiceChunks = [];
+
+let voiceMimeType = "";
+
+let isVoiceRecording = false;
+
+let voiceRecordingUserUid = null;
+
+let cancelVoiceRecording = false;
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const adminScreen =
+    document.getElementById("adminScreen");
+
+const emailInput =
+    document.getElementById("emailInput");
+
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const loginError =
+    document.getElementById("loginError");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const userList =
+    document.getElementById("userList");
+
+const stats =
+    document.getElementById("stats");
+
+const chatPanel =
+    document.getElementById("chatPanel");
+
+const chatUserName =
+    document.getElementById("chatUserName");
+
+const chatUserCode =
+    document.getElementById("chatUserCode");
+
+const chatMessages =
+    document.getElementById("chatMessages");
+
+const composer =
+    document.getElementById("composer");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendBtn =
+    document.getElementById("sendBtn");
+
+const attachBtn =
+    document.getElementById("attachBtn");
+
+const voiceBtn =
+    document.getElementById("voiceBtn");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const filePreview =
+    document.getElementById("filePreview");
+
+const mobileBack =
+    document.getElementById("mobileBack");
+
+const replyBox =
+    document.getElementById("replyBox");
+
+const replyText =
+    document.getElementById("replyText");
+
+const closeReplyBtn =
+    document.getElementById("closeReplyBtn");
+
+const recordingStatus =
+    document.getElementById("recordingStatus");
+
+const announcementInput =
+    document.getElementById("announcementInput");
+
+const announcementAttachBtn =
+    document.getElementById("announcementAttachBtn");
+
+const announcementFileInput =
+    document.getElementById("announcementFileInput");
+
+const announcementFileDisplay =
+    document.getElementById("announcementFile");
+
+const announcementSendBtn =
+    document.getElementById("announcementSendBtn");
+
+
+/* AUTH */
+
+auth.onAuthStateChanged(
+    function(user){
+
+        if(user){
+
+            if(user.uid !== ADMIN_UID){
+
+                alert(
+                    "This account is not authorized as Kulzzy Chat Admin."
+                );
+
+                auth.signOut();
+
+                return;
+
+            }
+
+            showAdmin();
+
+        }else{
+
+            showLogin();
+
+        }
+
+    }
+);
+
+
+/* LOGIN */
+
+function showLogin(){
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+    adminScreen.classList.add(
+        "hidden"
+    );
+
+}
+
+function showAdmin(){
+
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    adminScreen.classList.remove(
+        "hidden"
+    );
+
+    loadUsers();
+
+}
+
+loginBtn.addEventListener(
+    "click",
+    async function(){
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        loginError.textContent =
+            "";
+
+        if(!email || !password){
+
+            loginError.textContent =
+                "Please enter your email and password.";
+
+            return;
+
+        }
+
+        loginBtn.disabled =
+            true;
+
+        loginBtn.textContent =
+            "LOGGING IN...";
+
+        try{
+
+            const result =
+                await auth.signInWithEmailAndPassword(
+                    email,
+                    password
+                );
+
+            if(
+                result.user.uid !==
+                ADMIN_UID
+            ){
+
+                await auth.signOut();
+
+                throw new Error(
+                    "This account is not authorized as Kulzzy Chat Admin."
+                );
+
+            }
+
+        }catch(error){
+
+            console.error(error);
+
+            loginError.textContent =
+                firebaseLoginError(error);
+
+        }finally{
+
+            loginBtn.disabled =
+                false;
+
+            loginBtn.textContent =
+                "🔐 LOGIN";
+
+        }
+
+    }
+);
+
+
+/* LOGOUT */
+
+logoutBtn.addEventListener(
+    "click",
+    function(){
+
+        stopVoiceRecording(true);
+
+        if(conversationUnsubscribe){
+
+            conversationUnsubscribe();
+
+            conversationUnsubscribe =
+                null;
+
+        }
+
+        auth.signOut();
+
+    }
+);
+
+
+/* USERS */
+
+function loadUsers(){
+
+    const ref =
+        database.ref("users");
+
+    if(usersListener){
+
+        ref.off(
+            "value",
+            usersListener
+        );
+
+    }
+
+    usersListener =
+        function(snapshot){
+
+            const users = [];
+
+            snapshot.forEach(
+                function(child){
+
+                    const data =
+                        child.val();
+
+                    if(data){
+
+                        users.push({
+
+                            uid:child.key,
+
+                            ...data
+
+                        });
+
+                    }
+
+                }
+            );
+
+            users.sort(
+                function(a,b){
+
+                    return (
+                        b.createdAt || 0
+                    ) -
+                    (
+                        a.createdAt || 0
+                    );
+
+                }
+            );
+
+            stats.textContent =
+                users.length +
+                (
+                    users.length === 1
+                    ? " user"
+                    : " users"
+                );
+
+            renderUsers(users);
+
+        };
+
+    ref.on(
+        "value",
+        usersListener
+    );
+
+}
+
+function renderUsers(users){
+
+    userList.innerHTML =
+        "";
+
+    if(users.length === 0){
+
+        userList.innerHTML =
+            '<div class="empty-users">No users yet.</div>';
+
+        return;
+
+    }
+
+    users.forEach(
+        function(user){
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "user-card";
+
+            if(
+                selectedUser &&
+                selectedUser.uid === user.uid
+            ){
+
+                card.classList.add(
+                    "active"
+                );
+
+            }
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "user-name";
+
+            name.textContent =
+                user.name ||
+                "Unnamed User";
+
+            const phone =
+                document.createElement(
+                    "div"
+                );
+
+            phone.className =
+                "user-phone";
+
+            phone.textContent =
+                user.phone ||
+                "No phone";
+
+            const code =
+                document.createElement(
+                    "div"
+                );
+
+            code.className =
+                "user-code";
+
+            code.textContent =
+                user.chatCode ||
+                "";
+
+            card.appendChild(name);
+            card.appendChild(phone);
+            card.appendChild(code);
+
+            card.addEventListener(
+                "click",
+                function(){
+
+                    openConversation(
+                        user
+                    );
+
+                }
+            );
+
+            userList.appendChild(card);
+
+        }
+    );
+
+}
+
+
+/* OPEN CONVERSATION */
+
+function openConversation(user){
+
+    stopVoiceRecording(true);
+
+    selectedUser =
+        user;
+
+    document
+        .querySelectorAll(
+            ".user-card"
+        )
+        .forEach(
+            function(card){
+
+                card.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+    renderActiveUser();
+
+    if(conversationUnsubscribe){
+
+        conversationUnsubscribe();
+
+        conversationUnsubscribe =
+            null;
+
+    }
+
+    chatMessages.innerHTML =
+        "";
+
+    clearReply();
+
+    clearSelectedFile();
+
+    composer.classList.remove(
+        "hidden"
+    );
+
+    const ref =
+        database
+        .ref(
+            "conversations/" +
+            user.uid +
+            "/messages"
+        )
+        .limitToLast(200);
+
+    const listener =
+        ref.on(
+            "child_added",
+            function(snapshot){
+
+                const message =
+                    snapshot.val();
+
+                if(message){
+
+                    renderAdminMessage(
+                        snapshot.key,
+                        message
+                    );
+
+                }
+
+            }
+        );
+
+    conversationUnsubscribe =
+        function(){
+
+            ref.off(
+                "child_added",
+                listener
+            );
+
+        };
+
+    if(window.innerWidth <= 800){
+
+        document
+            .getElementById(
+                "usersPanel"
+            )
+            .style.display =
+                "none";
+
+        chatPanel.classList.add(
+            "mobile-open"
+        );
+
+    }
+
+}
+
+function renderActiveUser(){
+
+    if(!selectedUser){
+
+        chatUserName.textContent =
+            "Select a user";
+
+        chatUserCode.textContent =
+            "";
+
+        return;
+
+    }
+
+    chatUserName.textContent =
+        selectedUser.name ||
+        "Unnamed User";
+
+    chatUserCode.textContent =
+        selectedUser.chatCode ||
+        "";
+
+}
+
+
+/* RENDER ADMIN MESSAGE */
+
+function renderAdminMessage(
+    id,
+    message
+){
+
+    const empty =
+        chatMessages.querySelector(
+            ".no-chat"
+        );
+
+    if(empty){
+        empty.remove();
+    }
+
+    if(
+        document.getElementById(
+            "message-" + id
+        )
+    ){
+        return;
+    }
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+    wrapper.className =
+        "message " +
+        (
+            message.isAdmin
+            ? "admin"
+            : "user"
+        );
+
+    wrapper.id =
+        "message-" + id;
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+    bubble.className =
+        "message-bubble";
+
+
+    /* REPLY */
+
+    if(message.replyTo){
+
+        const reply =
+            document.createElement(
+                "div"
+            );
+
+        reply.className =
+            "message-reply";
+
+        const replySender =
+            document.createElement(
+                "strong"
+            );
+
+        replySender.textContent =
+            "↩ " +
+            (
+                message.replyTo.senderName ||
+                "Message"
+            );
+
+        const replyContent =
+            document.createElement(
+                "span"
+            );
+
+        replyContent.textContent =
+            message.replyTo.text ||
+            getMediaReplyText(
+                message.replyTo
+            );
+
+        reply.appendChild(
+            replySender
+        );
+
+        reply.appendChild(
+            replyContent
+        );
+
+        bubble.appendChild(
+            reply
+        );
+
+    }
+
+
+    /* SENDER */
+
+    const name =
+        document.createElement(
+            "div"
+        );
+
+    name.className =
+        "message-name";
+
+    name.textContent =
+        message.senderName ||
+        (
+            message.isAdmin
+            ? "Kulzzy Radio"
+            : "User"
+        );
+
+    bubble.appendChild(
+        name
+    );
+
+
+    /* TEXT */
+
+    if(message.text){
+
+        const text =
+            document.createElement(
+                "div"
+            );
+
+        text.className =
+            "message-text";
+
+        text.textContent =
+            message.text;
+
+        bubble.appendChild(
+            text
+        );
+
+    }
+
+
+    /* IMAGE */
+
+    if(
+        message.mediaUrl &&
+        message.mediaType ===
+            "image"
+    ){
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+        label.className =
+            "message-media-label";
+
+        label.textContent =
+            "📷 Picture";
+
+        bubble.appendChild(
+            label
+        );
+
+        const img =
+            document.createElement(
+                "img"
+            );
+
+        img.className =
+            "message-media";
+
+        img.src =
+            message.mediaUrl;
+
+        img.alt =
+            "Picture";
+
+        img.loading =
+            "lazy";
+
+        img.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+                window.open(
+                    message.mediaUrl,
+                    "_blank"
+                );
+
+            }
+        );
+
+        bubble.appendChild(
+            img
+        );
+
+    }
+
+
+    /* VIDEO */
+
+    if(
+        message.mediaUrl &&
+        message.mediaType ===
+            "video"
+    ){
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+        label.className =
+            "message-media-label";
+
+        label.textContent =
+            "🎥 Video";
+
+        bubble.appendChild(
+            label
+        );
+
+        const video =
+            document.createElement(
+                "video"
+            );
+
+        video.className =
+            "message-video";
+
+        video.controls =
+            true;
+
+        video.playsInline =
+            true;
+
+        video.preload =
+            "metadata";
+
+        const source =
+            document.createElement(
+                "source"
+            );
+
+        source.src =
+            message.mediaUrl;
+
+        video.appendChild(
+            source
+        );
+
+        video.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+            }
+        );
+
+        bubble.appendChild(
+            video
+        );
+
+    }
+
+
+    /* AUDIO */
+
+    if(
+        message.mediaUrl &&
+        message.mediaType ===
+            "audio"
+    ){
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+        label.className =
+            "message-media-label";
+
+        label.textContent =
+            "🎙️ Voice note";
+
+        bubble.appendChild(
+            label
+        );
+
+        const audio =
+            document.createElement(
+                "audio"
+            );
+
+        audio.className =
+            "message-audio";
+
+        audio.controls =
+            true;
+
+        audio.preload =
+            "metadata";
+
+        audio.src =
+            message.mediaUrl;
+
+        audio.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+            }
+        );
+
+        bubble.appendChild(
+            audio
+        );
+
+    }
+
+
+    /* TIME */
+
+    const time =
+        document.createElement(
+            "div"
+        );
+
+    time.className =
+        "message-time";
+
+    time.textContent =
+        formatDate(
+            message.createdAt ||
+            message.timestamp
+        );
+
+    bubble.appendChild(
+        time
+    );
+
+
+    wrapper.appendChild(
+        bubble
+    );
+
+
+    /* REPLY TO USER MESSAGE */
+
+    wrapper.addEventListener(
+        "click",
+        function(event){
+
+            if(message.isAdmin){
+                return;
+            }
+
+            if(
+                event.target.tagName ===
+                    "AUDIO" ||
+                event.target.tagName ===
+                    "VIDEO" ||
+                event.target.tagName ===
+                    "IMG" ||
+                event.target.tagName ===
+                    "SOURCE"
+            ){
+
+                return;
+
+            }
+
+            setReply(message);
+
+        }
+    );
+
+
+    chatMessages.appendChild(
+        wrapper
+    );
+
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+
+}
+
+
+/* MEDIA REPLY TEXT */
+
+function getMediaReplyText(message){
+
+    if(
+        message.mediaType ===
+        "image"
+    ){
+        return "📷 Picture";
+    }
+
+    if(
+        message.mediaType ===
+        "video"
+    ){
+        return "🎥 Video";
+    }
+
+    if(
+        message.mediaType ===
+        "audio"
+    ){
+        return "🎙️ Voice note";
+    }
+
+    return "Message";
+
+}
+
+
+/* REPLY */
+
+function setReply(message){
+
+    replyingTo =
+        message;
+
+    replyBox.classList.add(
+        "show"
+    );
+
+    const text =
+        message.text ||
+        getMediaReplyText(
+            message
+        );
+
+    replyText.textContent =
+        text;
+
+    messageInput.focus();
+
+}
+
+closeReplyBtn.addEventListener(
+    "click",
+    clearReply
+);
+
+function clearReply(){
+
+    replyingTo =
+        null;
+
+    replyBox.classList.remove(
+        "show"
+    );
+
+    replyText.textContent =
+        "";
+
+}
+
+
+/* ATTACHMENT */
+
+attachBtn.addEventListener(
+    "click",
+    function(){
+
+        if(isVoiceRecording){
+            return;
+        }
+
+        fileInput.click();
+
+    }
+);
+
+fileInput.addEventListener(
+    "change",
+    function(){
+
+        selectedFile =
+            fileInput.files[0] ||
+            null;
+
+        if(!selectedFile){
+
+            filePreview.classList.remove(
+                "show"
+            );
+
+            filePreview.textContent =
+                "";
+
+            return;
+
+        }
+
+        if(
+            selectedFile.size >
+            25 * 1024 * 1024
+        ){
+
+            alert(
+                "File is too large. Maximum size is 25MB."
+            );
+
+            fileInput.value =
+                "";
+
+            selectedFile =
+                null;
+
+            return;
+
+        }
+
+        if(
+            !selectedFile.type.startsWith(
+                "image/"
+            ) &&
+            !selectedFile.type.startsWith(
+                "video/"
+            )
+        ){
+
+            alert(
+                "Please select a picture or video."
+            );
+
+            fileInput.value =
+                "";
+
+            selectedFile =
+                null;
+
+            return;
+
+        }
+
+        filePreview.textContent =
+            (
+                selectedFile.type.startsWith(
+                    "image/"
+                )
+                ? "📷 "
+                : "🎥 "
+            ) +
+            selectedFile.name +
+            " (" +
+            formatFileSize(
+                selectedFile.size
+            ) +
+            ")";
+
+        filePreview.classList.add(
+            "show"
+        );
+
+    }
+);
+
+function clearSelectedFile(){
+
+    selectedFile =
+        null;
+
+    fileInput.value =
+        "";
+
+    filePreview.classList.remove(
+        "show"
+    );
+
+    filePreview.textContent =
+        "";
+
+}
+
+
+/* VOICE */
+
+function getSupportedVoiceMimeType(){
+
+    const types = [
+
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4",
+        "audio/ogg;codecs=opus",
+        "audio/ogg"
+
+    ];
+
+    if(!window.MediaRecorder){
+        return "";
+    }
+
+    for(
+        const type of types
+    ){
+
+        if(
+            MediaRecorder.isTypeSupported &&
+            MediaRecorder.isTypeSupported(
+                type
+            )
+        ){
+
+            return type;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+voiceBtn.addEventListener(
+    "click",
+    async function(){
+
+        if(isVoiceRecording){
+
+            await stopVoiceRecording();
+
+        }else{
+
+            await startVoiceRecording();
+
+        }
+
+    }
+);
+
+async function startVoiceRecording(){
+
+    if(!selectedUser){
+
+        alert(
+            "Please select a user first."
+        );
+
+        return;
+
+    }
+
+    if(
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia ||
+        !window.MediaRecorder
+    ){
+
+        alert(
+            "Voice recording is not supported by this browser."
+        );
+
+        return;
+
+    }
+
+    try{
+
+        clearSelectedFile();
+
+        voiceStream =
+            await navigator.mediaDevices.getUserMedia({
+                audio:true
+            });
+
+        voiceChunks = [];
+
+        voiceMimeType =
+            getSupportedVoiceMimeType();
+
+        voiceRecordingUserUid =
+            selectedUser.uid;
+
+        cancelVoiceRecording =
+            false;
+
+        if(voiceMimeType){
+
+            voiceRecorder =
+                new MediaRecorder(
+                    voiceStream,
+                    {
+                        mimeType:
+                            voiceMimeType
+                    }
+                );
+
+        }else{
+
+            voiceRecorder =
+                new MediaRecorder(
+                    voiceStream
+                );
+
+        }
+
+        voiceRecorder.ondataavailable =
+            function(event){
+
+                if(
+                    event.data &&
+                    event.data.size > 0
+                ){
+
+                    voiceChunks.push(
+                        event.data
+                    );
+
+                }
+
+            };
+
+        voiceRecorder.onerror =
+            function(event){
+
+                console.error(
+                    "Admin voice recorder error:",
+                    event
+                );
+
+                stopVoiceRecordingCleanup();
+
+                alert(
+                    "Voice recording failed."
+                );
+
+            };
+
+        voiceRecorder.onstop =
+            async function(){
+
+                const targetUid =
+                    voiceRecordingUserUid;
+
+                const chunks =
+                    voiceChunks.slice();
+
+                const actualType =
+                    voiceRecorder.mimeType ||
+                    voiceMimeType ||
+                    "audio/webm";
+
+                if(voiceStream){
+
+                    voiceStream
+                        .getTracks()
+                        .forEach(
+                            function(track){
+                                track.stop();
+                            }
+                        );
+
+                }
+
+                voiceStream =
+                    null;
+
+                voiceRecorder =
+                    null;
+
+                voiceChunks =
+                    [];
+
+                isVoiceRecording =
+                    false;
+
+                voiceRecordingUserUid =
+                    null;
+
+                voiceBtn.classList.remove(
+                    "recording"
+                );
+
+                voiceBtn.textContent =
+                    "🎙️";
+
+                recordingStatus.classList.remove(
+                    "show"
+                );
+
+                attachBtn.disabled =
+                    false;
+
+                sendBtn.disabled =
+                    false;
+
+                if(cancelVoiceRecording){
+
+                    cancelVoiceRecording =
+                        false;
+
+                    return;
+
+                }
+
+                const blob =
+                    new Blob(
+                        chunks,
+                        {
+                            type:
+                                actualType
+                        }
+                    );
+
+                if(
+                    !blob.size ||
+                    !targetUid
+                ){
+
+                    return;
+
+                }
+
+                try{
+
+                    await sendAdminVoiceNote(
+                        blob,
+                        actualType,
+                        targetUid
+                    );
+
+                }catch(error){
+
+                    console.error(
+                        "Admin voice send error:",
+                        error
+                    );
+
+                    alert(
+                        "Voice note could not be sent.\n\n" +
+                        error.message
+                    );
+
+                }
+
+            };
+
+        voiceRecorder.start();
+
+        isVoiceRecording =
+            true;
+
+        voiceBtn.classList.add(
+            "recording"
+        );
+
+        voiceBtn.textContent =
+            "⏹️";
+
+        recordingStatus.classList.add(
+            "show"
+        );
+
+        attachBtn.disabled =
+            true;
+
+        sendBtn.disabled =
+            true;
+
+    }catch(error){
+
+        console.error(
+            "Voice recording error:",
+            error
+        );
+
+        stopVoiceRecordingCleanup();
+
+        if(
+            error.name ===
+            "NotAllowedError"
+        ){
+
+            alert(
+                "Microphone permission was denied. Please allow microphone access and try again."
+            );
+
+        }else{
+
+            alert(
+                "Could not access the microphone."
+            );
+
+        }
+
+    }
+
+}
+
+async function stopVoiceRecording(
+    cancel = false
+){
+
+    if(!voiceRecorder){
+
+        stopVoiceRecordingCleanup();
+
+        return;
+
+    }
+
+    cancelVoiceRecording =
+        !!cancel;
+
+    if(
+        voiceRecorder.state ===
+        "inactive"
+    ){
+
+        stopVoiceRecordingCleanup();
+
+        return;
+
+    }
+
+    try{
+
+        voiceRecorder.stop();
+
+    }catch(error){
+
+        console.error(error);
+
+        stopVoiceRecordingCleanup();
+
+    }
+
+}
+
+function stopVoiceRecordingCleanup(){
+
+    isVoiceRecording =
+        false;
+
+    cancelVoiceRecording =
+        true;
+
+    voiceBtn.classList.remove(
+        "recording"
+    );
+
+    voiceBtn.textContent =
+        "🎙️";
+
+    recordingStatus.classList.remove(
+        "show"
+    );
+
+    attachBtn.disabled =
+        false;
+
+    sendBtn.disabled =
+        false;
+
+    if(voiceStream){
+
+        voiceStream
+            .getTracks()
+            .forEach(
+                function(track){
+                    track.stop();
+                }
+            );
+
+    }
+
+    voiceStream =
+        null;
+
+    voiceRecorder =
+        null;
+
+    voiceChunks =
+        [];
+
+    voiceRecordingUserUid =
+        null;
+
+}
+
+
+/* SEND ADMIN VOICE */
+
+async function sendAdminVoiceNote(
+    audioBlob,
+    mimeType,
+    targetUid
+){
+
+    if(!targetUid){
+
+        throw new Error(
+            "No conversation selected."
+        );
+
+    }
+
+    if(
+        !auth.currentUser ||
+        auth.currentUser.uid !==
+        ADMIN_UID
+    ){
+
+        throw new Error(
+            "Admin authentication is no longer active."
+        );
+
+    }
+
+    sendBtn.disabled =
+        true;
+
+    attachBtn.disabled =
+        true;
+
+    voiceBtn.disabled =
+        true;
+
+    try{
+
+        const extension =
+            mimeType.includes("mp4")
+            ? "m4a"
+            : mimeType.includes("ogg")
+            ? "ogg"
+            : "webm";
+
+        const file =
+            new File(
+                [audioBlob],
+                "admin-voice-note-" +
+                Date.now() +
+                "." +
+                extension,
+                {
+                    type:
+                        mimeType
+                }
+            );
+
+        const result =
+            await uploadToCloudinary(
+                file
+            );
+
+        const message = {
+
+            senderUid:
+                ADMIN_UID,
+
+            senderName:
+                "Kulzzy Radio",
+
+            isAdmin:
+                true,
+
+            text:
+                "",
+
+            mediaUrl:
+                result.secure_url,
+
+            mediaType:
+                "audio",
+
+            createdAt:
+                Date.now()
+
+        };
+
+        if(replyingTo){
+
+            message.replyTo = {
+
+                senderName:
+                    replyingTo.senderName ||
+                    "User",
+
+                text:
+                    replyingTo.text ||
+                    getMediaReplyText(
+                        replyingTo
+                    ),
+
+                mediaType:
+                    replyingTo.mediaType ||
+                    ""
+
+            };
+
+        }
+
+        await database
+            .ref(
+                "conversations/" +
+                targetUid +
+                "/messages"
+            )
+            .push(
+                message
+            );
+
+        await sendPrivateNotification(
+            targetUid,
+            "",
+            "audio"
+        );
+
+        if(
+            selectedUser &&
+            selectedUser.uid ===
+            targetUid
+        ){
+
+            clearReply();
+
+        }
+
+    }finally{
+
+        sendBtn.disabled =
+            false;
+
+        attachBtn.disabled =
+            false;
+
+        voiceBtn.disabled =
+            false;
+
+    }
+
+}
+
+
+/* TEXT / PICTURE / VIDEO */
+
+sendBtn.addEventListener(
+    "click",
+    sendAdminMessage
+);
+
+messageInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Enter" &&
+            !event.shiftKey
+        ){
+
+            event.preventDefault();
+
+            sendAdminMessage();
+
+        }
+
+    }
+);
+
+async function sendAdminMessage(){
+
+    if(isVoiceRecording){
+        return;
+    }
+
+    if(!selectedUser){
+
+        alert(
+            "Please select a user first."
+        );
+
+        return;
+
+    }
+
+    const text =
+        messageInput.value.trim();
+
+    if(
+        !text &&
+        !selectedFile
+    ){
+
+        return;
+
+    }
+
+    sendBtn.disabled =
+        true;
+
+    sendBtn.textContent =
+        "SENDING...";
+
+    try{
+
+        let mediaUrl =
+            "";
+
+        let mediaType =
+            "";
+
+        if(selectedFile){
+
+            const result =
+                await uploadToCloudinary(
+                    selectedFile
+                );
+
+            mediaUrl =
+                result.secure_url;
+
+            mediaType =
+                selectedFile.type.startsWith(
+                    "video/"
+                )
+                ? "video"
+                : "image";
+
+        }
+
+        const targetUid =
+            selectedUser.uid;
+
+        const message = {
+
+            senderUid:
+                ADMIN_UID,
+
+            senderName:
+                "Kulzzy Radio",
+
+            isAdmin:
+                true,
+
+            text:
+                text || "",
+
+            mediaUrl:
+                mediaUrl,
+
+            mediaType:
+                mediaType,
+
+            createdAt:
+                Date.now()
+
+        };
+
+        if(replyingTo){
+
+            message.replyTo = {
+
+                senderName:
+                    replyingTo.senderName ||
+                    "User",
+
+                text:
+                    replyingTo.text ||
+                    getMediaReplyText(
+                        replyingTo
+                    ),
+
+                mediaType:
+                    replyingTo.mediaType ||
+                    ""
+
+            };
+
+        }
+
+        await database
+            .ref(
+                "conversations/" +
+                targetUid +
+                "/messages"
+            )
+            .push(
+                message
+            );
+
+        await sendPrivateNotification(
+            targetUid,
+            text,
+            mediaType
+        );
+
+        messageInput.value =
+            "";
+
+        clearSelectedFile();
+
+        clearReply();
+
+    }catch(error){
+
+        console.error(
+            "Admin send error:",
+            error
+        );
+
+        alert(
+            "Unable to send message.\n\n" +
+            error.message
+        );
+
+    }finally{
+
+        sendBtn.disabled =
+            false;
+
+        sendBtn.textContent =
+            "SEND";
+
+    }
+
+}
+
+
+/* CLOUDINARY */
+
+async function uploadToCloudinary(file){
+
+    if(!file){
+
+        throw new Error(
+            "No file selected."
+        );
+
+    }
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+    formData.append(
+        "upload_preset",
+        CLOUDINARY_UPLOAD_PRESET
+    );
+
+    const response =
+        await fetch(
+            CLOUDINARY_UPLOAD_URL,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+    if(!response.ok){
+
+        let errorMessage =
+            "Cloudinary upload failed.";
+
+        try{
+
+            const errorData =
+                await response.json();
+
+            if(
+                errorData &&
+                errorData.error &&
+                errorData.error.message
+            ){
+
+                errorMessage =
+                    errorData.error.message;
+
+            }
+
+        }catch(error){
+
+            try{
+
+                const text =
+                    await response.text();
+
+                if(text){
+                    errorMessage =
+                        text;
+                }
+
+            }catch(e){}
+
+        }
+
+        throw new Error(
+            errorMessage
+        );
+
+    }
+
+    const data =
+        await response.json();
+
+    if(!data.secure_url){
+
+        throw new Error(
+            "Cloudinary did not return a secure URL."
+        );
+
+    }
+
+    return data;
+
+}
+
+
+/* PRIVATE NOTIFICATION */
+
+async function sendPrivateNotification(
+    uid,
+    text,
+    mediaType
+){
+
+    try{
+
+        const currentUser =
+            auth.currentUser;
+
+        if(!currentUser){
+            return;
+        }
+
+        const idToken =
+            await currentUser.getIdToken();
+
+        let messageText =
+            text ||
+            (
+                mediaType === "image"
+                ? "📷 Kulzzy Radio sent you a picture"
+                : mediaType === "video"
+                ? "🎥 Kulzzy Radio sent you a video"
+                : mediaType === "audio"
+                ? "🎙️ Kulzzy Radio sent you a voice note"
+                : "💬 New message from Kulzzy Radio"
+            );
+
+        const payload = {
+
+            type:
+                "private",
+
+            uid:
+                uid,
+
+            title:
+                "💬 Kulzzy Radio",
+
+            message:
+                messageText,
+
+            url:
+                "https://kulzzy.github.io/001/",
+
+            idToken:
+                idToken
+
+        };
+
+        await fetch(
+            NOTIFICATION_SERVER_URL,
+            {
+                method:"POST",
+                mode:"no-cors",
+                headers:{
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
+
+        console.log(
+            "Private notification request sent."
+        );
+
+    }catch(error){
+
+        console.error(
+            "Private notification error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* GENERAL ANNOUNCEMENT */
+
+announcementAttachBtn.addEventListener(
+    "click",
+    function(){
+
+        announcementFileInput.click();
+
+    }
+);
+
+announcementFileInput.addEventListener(
+    "change",
+    function(){
+
+        announcementFile =
+            announcementFileInput.files[0] ||
+            null;
+
+        if(!announcementFile){
+
+            announcementFileDisplay
+                .classList.remove(
+                    "show"
+                );
+
+            announcementFileDisplay.textContent =
+                "";
+
+            return;
+
+        }
+
+        if(
+            announcementFile.size >
+            25 * 1024 * 1024
+        ){
+
+            alert(
+                "File is too large. Maximum size is 25MB."
+            );
+
+            announcementFileInput.value =
+                "";
+
+            announcementFile =
+                null;
+
+            return;
+
+        }
+
+        announcementFileDisplay.textContent =
+            "📎 " +
+            announcementFile.name +
+            " (" +
+            formatFileSize(
+                announcementFile.size
+            ) +
+            ")";
+
+        announcementFileDisplay
+            .classList.add(
+                "show"
+            );
+
+    }
+);
+
+announcementSendBtn.addEventListener(
+    "click",
+    sendGeneralAnnouncement
+);
+
+async function sendGeneralAnnouncement(){
+
+    const text =
+        announcementInput.value.trim();
+
+    if(
+        !text &&
+        !announcementFile
+    ){
+
+        alert(
+            "Please write an announcement or attach a picture/video."
+        );
+
+        return;
+
+    }
+
+    if(
+        !confirm(
+            "Send this announcement to ALL subscribed Kulzzy Chat users?"
+        )
+    ){
+
+        return;
+
+    }
+
+    announcementSendBtn.disabled =
+        true;
+
+    announcementSendBtn.textContent =
+        "SENDING...";
+
+    try{
+
+        let mediaUrl =
+            "";
+
+        let mediaType =
+            "";
+
+        if(announcementFile){
+
+            const result =
+                await uploadToCloudinary(
+                    announcementFile
+                );
+
+            mediaUrl =
+                result.secure_url;
+
+            mediaType =
+                announcementFile.type.startsWith(
+                    "video/"
+                )
+                ? "video"
+                : "image";
+
+        }
+
+        const snapshot =
+            await database
+                .ref("users")
+                .once("value");
+
+        const users = [];
+
+        snapshot.forEach(
+            function(child){
+
+                if(child.val()){
+
+                    users.push({
+
+                        uid:
+                            child.key,
+
+                        ...child.val()
+
+                    });
+
+                }
+
+            }
+        );
+
+        if(users.length === 0){
+
+            alert(
+                "There are no users yet."
+            );
+
+            return;
+
+        }
+
+        const updates = {};
+
+        const messageBase = {
+
+            senderUid:
+                ADMIN_UID,
+
+            senderName:
+                "Kulzzy Radio",
+
+            isAdmin:
+                true,
+
+            isAnnouncement:
+                true,
+
+            text:
+                text || "",
+
+            mediaUrl:
+                mediaUrl,
+
+            mediaType:
+                mediaType,
+
+            createdAt:
+                Date.now()
+
+        };
+
+        users.forEach(
+            function(user){
+
+                const messageKey =
+                    database
+                        .ref(
+                            "conversations/" +
+                            user.uid +
+                            "/messages"
+                        )
+                        .push()
+                        .key;
+
+                updates[
+                    "conversations/" +
+                    user.uid +
+                    "/messages/" +
+                    messageKey
+                ] =
+                    messageBase;
+
+            }
+        );
+
+        await database
+            .ref()
+            .update(
+                updates
+            );
+
+        await sendBroadcastNotification(
+            text,
+            mediaType
+        );
+
+        announcementInput.value =
+            "";
+
+        announcementFileInput.value =
+            "";
+
+        announcementFile =
+            null;
+
+        announcementFileDisplay
+            .classList.remove(
+                "show"
+            );
+
+        announcementFileDisplay.textContent =
+            "";
+
+        alert(
+            "✅ Announcement sent successfully to " +
+            users.length +
+            " users."
+        );
+
+    }catch(error){
+
+        console.error(
+            "Announcement error:",
+            error
+        );
+
+        alert(
+            "Announcement failed.\n\n" +
+            error.message
+        );
+
+    }finally{
+
+        announcementSendBtn.disabled =
+            false;
+
+        announcementSendBtn.textContent =
+            "📢 SEND TO EVERYONE";
+
+    }
+
+}
+
+
+/* BROADCAST NOTIFICATION */
+
+async function sendBroadcastNotification(
+    text,
+    mediaType
+){
+
+    try{
+
+        const currentUser =
+            auth.currentUser;
+
+        if(!currentUser){
+            return;
+        }
+
+        const idToken =
+            await currentUser.getIdToken();
+
+        let messageText =
+            text ||
+            (
+                mediaType === "image"
+                ? "📷 Kulzzy Radio sent a new picture announcement"
+                : mediaType === "video"
+                ? "🎥 Kulzzy Radio sent a new video announcement"
+                : "📢 New announcement from Kulzzy Radio"
+            );
+
+        const payload = {
+
+            type:
+                "broadcast",
+
+            title:
+                "📢 KULZZY RADIO",
+
+            message:
+                messageText,
+
+            url:
+                "https://kulzzy.github.io/001/",
+
+            idToken:
+                idToken
+
+        };
+
+        await fetch(
+            NOTIFICATION_SERVER_URL,
+            {
+                method:"POST",
+                mode:"no-cors",
+                headers:{
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
+
+        console.log(
+            "Broadcast notification request sent."
+        );
+
+    }catch(error){
+
+        console.error(
+            "Broadcast notification error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* MOBILE BACK */
+
+mobileBack.addEventListener(
+    "click",
+    function(){
+
+        stopVoiceRecording(true);
+
+        chatPanel.classList.remove(
+            "mobile-open"
+        );
+
+        document
+            .getElementById(
+                "usersPanel"
+            )
+            .style.display =
+                "";
+
+    }
+);
+
+
+/* TIME */
+
+function formatDate(timestamp){
+
+    if(!timestamp){
+        return "";
+    }
+
+    const date =
+        new Date(timestamp);
+
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+    return date.toLocaleDateString(
+        "en-NG",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }
+    ) +
+    " " +
+    date.toLocaleTimeString(
+        "en-NG",
+        {
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* FILE SIZE */
+
+function formatFileSize(bytes){
+
+    if(bytes < 1024){
+
+        return bytes +
+            " B";
+
+    }
+
+    if(
+        bytes <
+        1024 * 1024
+    ){
+
+        return (
+            bytes / 1024
+        ).toFixed(1) +
+        " KB";
+
+    }
+
+    return (
+        bytes /
+        (1024 * 1024)
+    ).toFixed(1) +
+    " MB";
+
+}
+
+
+/* LOGIN ERROR */
+
+function firebaseLoginError(error){
+
+    switch(error.code){
+
+        case "auth/invalid-email":
+            return "Invalid email address.";
+
+        case "auth/user-disabled":
+            return "This account has been disabled.";
+
+        case "auth/user-not-found":
+            return "Admin account not found.";
+
+        case "auth/wrong-password":
+            return "Incorrect password.";
+
+        case "auth/invalid-credential":
+            return "Incorrect email or password.";
+
+        case "auth/too-many-requests":
+            return "Too many login attempts. Try again later.";
+
+        default:
+            return error.message ||
+                "Unable to login.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
