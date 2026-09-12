@@ -1,0 +1,4545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Kulzzy Chat Admin</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#020b1b;
+    color:#fff;
+}
+
+button,
+input,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    touch-action:manipulation;
+}
+
+.hidden{
+    display:none!important;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+    position:fixed;
+    inset:0;
+    background:#020b1b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.loginBox{
+    width:100%;
+    max-width:430px;
+    background:#06152d;
+    border:1px solid #c9a227;
+    border-radius:20px;
+    padding:30px 22px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+
+.logoText{
+    color:#ffd700;
+    font-size:31px;
+    font-weight:900;
+}
+
+.loginTitle{
+    font-size:22px;
+    font-weight:900;
+    margin-top:12px;
+}
+
+.loginSub{
+    color:#aebbd0;
+    font-size:14px;
+    line-height:1.5;
+    margin:10px 0 22px;
+}
+
+#adminKey{
+    width:100%;
+    height:52px;
+    border:1px solid #40516d;
+    background:#020b1b;
+    color:#fff;
+    border-radius:12px;
+    padding:0 15px;
+    outline:none;
+}
+
+#adminKey:focus{
+    border-color:#ffd700;
+}
+
+.loginBtn{
+    width:100%;
+    height:52px;
+    margin-top:13px;
+    border:0;
+    border-radius:12px;
+    background:#ffd700;
+    color:#06152d;
+    font-weight:900;
+    font-size:16px;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+#app{
+    position:fixed;
+    inset:0;
+    display:none;
+    flex-direction:column;
+    background:#020b1b;
+}
+
+#app.active{
+    display:flex;
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.topHeader{
+    height:62px;
+    min-height:62px;
+    background:#06152d;
+    border-bottom:1px solid #293a56;
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    gap:10px;
+}
+
+.logoCircle{
+    width:42px;
+    height:42px;
+    min-width:42px;
+    border-radius:50%;
+    background:#ffd700;
+    color:#06152d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    font-weight:900;
+}
+
+.topTitle{
+    flex:1;
+    min-width:0;
+}
+
+.topTitleMain{
+    font-size:17px;
+    font-weight:900;
+}
+
+.topTitleSub{
+    color:#7ee787;
+    font-size:11px;
+    margin-top:2px;
+}
+
+.headerBtn{
+    border:0;
+    background:#102443;
+    color:#ffd700;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    font-size:20px;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.mainArea{
+    flex:1;
+    min-height:0;
+    display:flex;
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   USERS PANEL
+========================================================= */
+
+.usersPanel{
+    width:310px;
+    min-width:310px;
+    background:#06152d;
+    border-right:1px solid #293a56;
+    display:flex;
+    flex-direction:column;
+}
+
+.usersHeader{
+    padding:11px;
+    border-bottom:1px solid #293a56;
+}
+
+.usersHeaderTop{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.usersTitle{
+    flex:1;
+    font-size:16px;
+    font-weight:900;
+}
+
+.userCount{
+    background:#ffd700;
+    color:#06152d;
+    font-size:11px;
+    font-weight:900;
+    border-radius:20px;
+    padding:4px 8px;
+}
+
+.searchBox{
+    width:100%;
+    height:40px;
+    margin-top:9px;
+    border:1px solid #3b4b66;
+    background:#020b1b;
+    color:#fff;
+    border-radius:10px;
+    padding:0 11px;
+    outline:none;
+}
+
+.searchBox:focus{
+    border-color:#ffd700;
+}
+
+#usersList{
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+}
+
+.userItem{
+    width:100%;
+    border:0;
+    border-bottom:1px solid #182b46;
+    background:transparent;
+    color:#fff;
+    text-align:left;
+    padding:12px 11px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.userItem:active{
+    background:#102443;
+}
+
+.userItem.selected{
+    background:#102443;
+    border-left:4px solid #ffd700;
+}
+
+.userAvatar{
+    width:43px;
+    height:43px;
+    min-width:43px;
+    border-radius:50%;
+    background:#075eaa;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:900;
+    font-size:17px;
+}
+
+.userInfo{
+    min-width:0;
+    flex:1;
+}
+
+.userName{
+    font-size:14px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.userCode{
+    font-size:10px;
+    color:#8f9db3;
+    margin-top:3px;
+}
+
+.userLastSeen{
+    font-size:10px;
+    color:#667893;
+    margin-top:3px;
+}
+
+.noUsers{
+    color:#8290a6;
+    text-align:center;
+    padding:30px 15px;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   CHAT PANEL
+========================================================= */
+
+.chatPanel{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    background:#020b1b;
+}
+
+.chatTop{
+    height:62px;
+    min-height:62px;
+    background:#06152d;
+    border-bottom:1px solid #293a56;
+    display:flex;
+    align-items:center;
+    padding:0 10px;
+    gap:9px;
+}
+
+.mobileBack{
+    display:none;
+    border:0;
+    background:transparent;
+    color:#ffd700;
+    font-size:24px;
+    padding:6px;
+}
+
+.chatAvatar{
+    width:41px;
+    height:41px;
+    min-width:41px;
+    border-radius:50%;
+    background:#075eaa;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.chatUserInfo{
+    flex:1;
+    min-width:0;
+}
+
+.chatUserName{
+    font-size:16px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.chatUserCode{
+    color:#8d9bb1;
+    font-size:10px;
+    margin-top:2px;
+}
+
+.chatRefresh{
+    width:40px;
+    height:40px;
+    border:0;
+    background:#102443;
+    color:#ffd700;
+    border-radius:10px;
+    font-size:20px;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+#messages{
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:13px 10px;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+}
+
+.emptyChat{
+    height:100%;
+    min-height:200px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#8997ac;
+    padding:30px;
+}
+
+.emptyIcon{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+.messageRow{
+    width:100%;
+    display:flex;
+    margin:5px 0;
+}
+
+.messageRow.user{
+    justify-content:flex-start;
+}
+
+.messageRow.admin{
+    justify-content:flex-end;
+}
+
+.messageBubble{
+    max-width:82%;
+    min-width:70px;
+    padding:9px 11px;
+    border-radius:14px;
+    word-break:break-word;
+}
+
+.messageRow.user .messageBubble{
+    background:#075eaa;
+    border-bottom-left-radius:4px;
+}
+
+.messageRow.admin .messageBubble{
+    background:#8b6d00;
+    border-bottom-right-radius:4px;
+}
+
+.senderName{
+    font-size:10px;
+    font-weight:900;
+    margin-bottom:4px;
+    opacity:.85;
+}
+
+.messageText{
+    font-size:15px;
+    line-height:1.42;
+    white-space:pre-wrap;
+}
+
+.messageTime{
+    font-size:9px;
+    opacity:.65;
+    text-align:right;
+    margin-top:5px;
+}
+
+.messageBubble img,
+.messageBubble video{
+    display:block;
+    width:100%;
+    max-width:300px;
+    max-height:360px;
+    border-radius:9px;
+    object-fit:contain;
+    background:#000;
+}
+
+.messageBubble audio{
+    width:250px;
+    max-width:100%;
+}
+
+
+/* =========================================================
+   COMPOSER
+========================================================= */
+
+.composer{
+    background:#06152d;
+    border-top:1px solid #293a56;
+    padding:8px;
+    flex-shrink:0;
+}
+
+.attachPreview{
+    display:none;
+    align-items:center;
+    gap:8px;
+    background:#020b1b;
+    border:1px solid #384a66;
+    border-radius:10px;
+    padding:7px;
+    margin-bottom:7px;
+}
+
+.attachPreview.active{
+    display:flex;
+}
+
+.previewName{
+    flex:1;
+    min-width:0;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    font-size:12px;
+}
+
+.removeFile{
+    width:30px;
+    height:30px;
+    border:0;
+    border-radius:50%;
+    background:#b00020;
+    color:#fff;
+}
+
+.composerRow{
+    display:flex;
+    align-items:flex-end;
+    gap:6px;
+}
+
+.iconBtn{
+    width:43px;
+    height:43px;
+    min-width:43px;
+    border:0;
+    border-radius:50%;
+    background:#102443;
+    color:#ffd700;
+    font-size:20px;
+}
+
+#messageInput{
+    flex:1;
+    min-width:0;
+    min-height:43px;
+    max-height:120px;
+    resize:none;
+    border:1px solid #40516d;
+    border-radius:13px;
+    background:#020b1b;
+    color:#fff;
+    padding:11px 13px;
+    outline:none;
+}
+
+#messageInput:focus{
+    border-color:#ffd700;
+}
+
+#sendBtn{
+    width:46px;
+    height:46px;
+    min-width:46px;
+    border:0;
+    border-radius:50%;
+    background:#ffd700;
+    color:#06152d;
+    font-weight:900;
+    font-size:19px;
+}
+
+#sendBtn:disabled{
+    opacity:.45;
+}
+
+.hiddenFile{
+    display:none;
+}
+
+
+/* =========================================================
+   RECORDING
+========================================================= */
+
+.recording{
+    display:none;
+    align-items:center;
+    gap:8px;
+    color:#ff7070;
+    font-size:13px;
+    padding:6px 7px;
+    background:#06152d;
+}
+
+.recording.active{
+    display:flex;
+}
+
+.recordDot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#ff3030;
+    animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+    50%{
+        opacity:.2;
+    }
+}
+
+
+/* =========================================================
+   BROADCAST
+========================================================= */
+
+.broadcastOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    z-index:200;
+}
+
+.broadcastOverlay.active{
+    display:flex;
+}
+
+.broadcastBox{
+    width:100%;
+    max-width:500px;
+    max-height:92vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    background:#06152d;
+    border:1px solid #ffd700;
+    border-radius:18px;
+    padding:17px;
+}
+
+.broadcastHeader{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:13px;
+}
+
+.broadcastTitle{
+    flex:1;
+    font-size:18px;
+    font-weight:900;
+    color:#ffd700;
+}
+
+.closeBroadcast{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    background:#102443;
+    color:#fff;
+    font-size:23px;
+}
+
+.broadcastNotice{
+    background:#102443;
+    border:1px solid #293d5c;
+    color:#b9c5d8;
+    border-radius:10px;
+    padding:10px;
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:12px;
+}
+
+#broadcastInput{
+    width:100%;
+    min-height:120px;
+    max-height:260px;
+    resize:none;
+    border:1px solid #40516d;
+    border-radius:12px;
+    background:#020b1b;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+#broadcastInput:focus{
+    border-color:#ffd700;
+}
+
+.broadcastAttachRow{
+    display:flex;
+    gap:7px;
+    margin-top:9px;
+}
+
+.broadcastSmallBtn{
+    flex:1;
+    min-height:42px;
+    border:0;
+    border-radius:10px;
+    background:#102443;
+    color:#ffd700;
+    font-weight:800;
+}
+
+.broadcastActions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.broadcastCancel{
+    flex:1;
+    height:46px;
+    border:1px solid #45556e;
+    border-radius:11px;
+    background:transparent;
+    color:#fff;
+}
+
+.broadcastSend{
+    flex:2;
+    height:46px;
+    border:0;
+    border-radius:11px;
+    background:#ffd700;
+    color:#06152d;
+    font-weight:900;
+}
+
+.broadcastProgress{
+    display:none;
+    margin-top:13px;
+}
+
+.broadcastProgress.active{
+    display:block;
+}
+
+.progressText{
+    font-size:12px;
+    color:#c0cce0;
+    margin-bottom:6px;
+}
+
+.progressTrack{
+    width:100%;
+    height:8px;
+    background:#020b1b;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progressBar{
+    width:0%;
+    height:100%;
+    background:#ffd700;
+    transition:width .2s;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+#toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%);
+    background:#111d31;
+    border:1px solid #ffd700;
+    color:#fff;
+    padding:10px 16px;
+    border-radius:10px;
+    font-size:13px;
+    z-index:500;
+    display:none;
+    max-width:92%;
+    text-align:center;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+    .usersPanel{
+        width:100%;
+        min-width:100%;
+    }
+
+    .chatPanel{
+        position:absolute;
+        inset:0;
+        display:none;
+    }
+
+    .chatPanel.mobileActive{
+        display:flex;
+    }
+
+    .usersPanel.mobileHidden{
+        display:none;
+    }
+
+    .mobileBack{
+        display:block;
+    }
+
+    .messageBubble{
+        max-width:88%;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media(max-width:380px){
+
+    .iconBtn{
+        width:40px;
+        min-width:40px;
+        height:40px;
+    }
+
+    #sendBtn{
+        width:43px;
+        min-width:43px;
+        height:43px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<section id="loginScreen">
+
+    <div class="loginBox">
+
+        <div class="logoText">
+            KULZZY
+        </div>
+
+        <div class="loginTitle">
+            KULZZY CHAT ADMIN
+        </div>
+
+        <div class="loginSub">
+            Private customer conversations,
+            media messages and broadcast messaging.
+        </div>
+
+        <input
+            id="adminKey"
+            type="password"
+            placeholder="Enter admin key"
+            autocomplete="off"
+        >
+
+        <button
+            id="loginBtn"
+            class="loginBtn"
+            type="button"
+        >
+            OPEN ADMIN
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<section id="app">
+
+
+    <!-- TOP HEADER -->
+
+    <header class="topHeader">
+
+        <div class="logoCircle">
+            K
+        </div>
+
+        <div class="topTitle">
+
+            <div class="topTitleMain">
+                KULZZY CHAT ADMIN
+            </div>
+
+            <div class="topTitleSub">
+                ● Connected
+            </div>
+
+        </div>
+
+        <button
+            id="broadcastBtn"
+            class="headerBtn"
+            type="button"
+            title="Broadcast"
+        >
+            📢
+        </button>
+
+        <button
+            id="refreshUsersBtn"
+            class="headerBtn"
+            type="button"
+            title="Refresh users"
+        >
+            ↻
+        </button>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <div class="mainArea">
+
+
+        <!-- USERS -->
+
+        <aside
+            id="usersPanel"
+            class="usersPanel"
+        >
+
+            <div class="usersHeader">
+
+                <div class="usersHeaderTop">
+
+                    <div class="usersTitle">
+                        USERS
+                    </div>
+
+                    <div
+                        id="userCount"
+                        class="userCount"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+                <input
+                    id="searchBox"
+                    class="searchBox"
+                    type="text"
+                    placeholder="Search users..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div id="usersList">
+
+                <div class="noUsers">
+                    Loading users...
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- CHAT -->
+
+        <main
+            id="chatPanel"
+            class="chatPanel"
+        >
+
+
+            <header class="chatTop">
+
+                <button
+                    id="mobileBack"
+                    class="mobileBack"
+                    type="button"
+                >
+                    ‹
+                </button>
+
+
+                <div
+                    id="chatAvatar"
+                    class="chatAvatar"
+                >
+                    K
+                </div>
+
+
+                <div class="chatUserInfo">
+
+                    <div
+                        id="chatUserName"
+                        class="chatUserName"
+                    >
+                        Select a user
+                    </div>
+
+                    <div
+                        id="chatUserCode"
+                        class="chatUserCode"
+                    >
+                        Choose a conversation
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="chatRefresh"
+                    class="chatRefresh"
+                    type="button"
+                    title="Refresh conversation"
+                >
+                    ↻
+                </button>
+
+            </header>
+
+
+            <main id="messages">
+
+                <div class="emptyChat">
+
+                    <div>
+
+                        <div class="emptyIcon">
+                            💬
+                        </div>
+
+                        Select a user to open
+                        their private conversation.
+
+                    </div>
+
+                </div>
+
+            </main>
+
+
+            <!-- RECORDING -->
+
+            <div
+                id="recordingBar"
+                class="recording"
+            >
+
+                <span class="recordDot"></span>
+
+                Recording voice note...
+
+                <span id="recordTime">
+                    0:00
+                </span>
+
+            </div>
+
+
+            <!-- COMPOSER -->
+
+            <div class="composer">
+
+
+                <div
+                    id="attachPreview"
+                    class="attachPreview"
+                >
+
+                    <div
+                        id="previewName"
+                        class="previewName"
+                    ></div>
+
+                    <button
+                        id="removeFile"
+                        class="removeFile"
+                        type="button"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="composerRow">
+
+
+                    <button
+                        id="attachBtn"
+                        class="iconBtn"
+                        type="button"
+                        title="Attach picture or video"
+                    >
+                        +
+                    </button>
+
+
+                    <input
+                        id="fileInput"
+                        class="hiddenFile"
+                        type="file"
+                        accept="image/*,video/*"
+                    >
+
+
+                    <textarea
+                        id="messageInput"
+                        rows="1"
+                        maxlength="5000"
+                        placeholder="Select a user..."
+                    ></textarea>
+
+
+                    <button
+                        id="voiceBtn"
+                        class="iconBtn"
+                        type="button"
+                        title="Voice note"
+                    >
+                        🎤
+                    </button>
+
+
+                    <button
+                        id="sendBtn"
+                        type="button"
+                        title="Send"
+                    >
+                        ➤
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     BROADCAST WINDOW
+========================================================= -->
+
+<div
+    id="broadcastOverlay"
+    class="broadcastOverlay"
+>
+
+    <div class="broadcastBox">
+
+        <div class="broadcastHeader">
+
+            <div class="broadcastTitle">
+                📢 BROADCAST TO USERS
+            </div>
+
+            <button
+                id="closeBroadcast"
+                class="closeBroadcast"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="broadcastNotice">
+
+            This message will be sent as a normal
+            <b>KULZZY RADIO</b> message to every
+            registered user in the database.
+
+            You can broadcast as many times as you want.
+
+        </div>
+
+
+        <textarea
+            id="broadcastInput"
+            maxlength="5000"
+            placeholder="Type your broadcast message..."
+        ></textarea>
+
+
+        <div class="broadcastAttachRow">
+
+            <button
+                id="broadcastFileBtn"
+                class="broadcastSmallBtn"
+                type="button"
+            >
+                📎 Add Picture / Video
+            </button>
+
+            <button
+                id="broadcastVoiceBtn"
+                class="broadcastSmallBtn"
+                type="button"
+            >
+                🎤 Voice Note
+            </button>
+
+        </div>
+
+
+        <input
+            id="broadcastFileInput"
+            class="hiddenFile"
+            type="file"
+            accept="image/*,video/*"
+        >
+
+
+        <div
+            id="broadcastFilePreview"
+            class="attachPreview"
+        >
+
+            <div
+                id="broadcastFileName"
+                class="previewName"
+            ></div>
+
+            <button
+                id="broadcastRemoveFile"
+                class="removeFile"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="broadcastActions">
+
+            <button
+                id="broadcastCancel"
+                class="broadcastCancel"
+                type="button"
+            >
+                CANCEL
+            </button>
+
+            <button
+                id="broadcastSend"
+                class="broadcastSend"
+                type="button"
+            >
+                SEND TO ALL USERS
+            </button>
+
+        </div>
+
+
+        <div
+            id="broadcastProgress"
+            class="broadcastProgress"
+        >
+
+            <div
+                id="progressText"
+                class="progressText"
+            >
+                Preparing broadcast...
+            </div>
+
+            <div class="progressTrack">
+
+                <div
+                    id="progressBar"
+                    class="progressBar"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+
+
+/* =========================================================
+   KULZZY CHAT ADMIN
+========================================================= */
+
+
+/* =========================================================
+   NEW APPS SCRIPT URL
+========================================================= */
+
+const API_URL =
+    "https://script.google.com/macros/s/AKfycbyHb4d7HWRYHwT_sFB6hFV7Uap8yaiOy8SQclo7h73P1qF5jJUfzFH_I44hOA7Pz64C7Q/exec";
+
+
+/* =========================================================
+   ADMIN KEY
+========================================================= */
+
+const ADMIN_KEY =
+    "KULZZY-ADMIN-2026";
+
+
+/* =========================================================
+   CLOUDINARY
+========================================================= */
+
+const CLOUDINARY_UPLOAD_URL =
+    "https://api.cloudinary.com/v1_1/s4j0x7dk/auto/upload";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "kulzzy_chat";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let users = [];
+
+let selectedUser = null;
+
+let selectedFile = null;
+
+let mediaRecorder = null;
+
+let recordedChunks = [];
+
+let recordingStartedAt = 0;
+
+let recordingTimer = null;
+
+let refreshUsersTimer = null;
+
+let refreshMessagesTimer = null;
+
+let lastRenderedSignature = "";
+
+let adminLoggedIn = false;
+
+
+/* =========================================================
+   BROADCAST STATE
+========================================================= */
+
+let broadcastFile = null;
+
+let broadcastRecording = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const adminKey =
+    document.getElementById("adminKey");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const app =
+    document.getElementById("app");
+
+const usersPanel =
+    document.getElementById("usersPanel");
+
+const usersList =
+    document.getElementById("usersList");
+
+const userCount =
+    document.getElementById("userCount");
+
+const searchBox =
+    document.getElementById("searchBox");
+
+const chatPanel =
+    document.getElementById("chatPanel");
+
+const mobileBack =
+    document.getElementById("mobileBack");
+
+const chatAvatar =
+    document.getElementById("chatAvatar");
+
+const chatUserName =
+    document.getElementById("chatUserName");
+
+const chatUserCode =
+    document.getElementById("chatUserCode");
+
+const chatRefresh =
+    document.getElementById("chatRefresh");
+
+const messages =
+    document.getElementById("messages");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendBtn =
+    document.getElementById("sendBtn");
+
+const attachBtn =
+    document.getElementById("attachBtn");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const voiceBtn =
+    document.getElementById("voiceBtn");
+
+const attachPreview =
+    document.getElementById("attachPreview");
+
+const previewName =
+    document.getElementById("previewName");
+
+const removeFile =
+    document.getElementById("removeFile");
+
+const recordingBar =
+    document.getElementById("recordingBar");
+
+const recordTime =
+    document.getElementById("recordTime");
+
+const refreshUsersBtn =
+    document.getElementById("refreshUsersBtn");
+
+const broadcastBtn =
+    document.getElementById("broadcastBtn");
+
+const broadcastOverlay =
+    document.getElementById("broadcastOverlay");
+
+const closeBroadcast =
+    document.getElementById("closeBroadcast");
+
+const broadcastCancel =
+    document.getElementById("broadcastCancel");
+
+const broadcastInput =
+    document.getElementById("broadcastInput");
+
+const broadcastFileBtn =
+    document.getElementById("broadcastFileBtn");
+
+const broadcastFileInput =
+    document.getElementById("broadcastFileInput");
+
+const broadcastFilePreview =
+    document.getElementById("broadcastFilePreview");
+
+const broadcastFileName =
+    document.getElementById("broadcastFileName");
+
+const broadcastRemoveFile =
+    document.getElementById("broadcastRemoveFile");
+
+const broadcastSend =
+    document.getElementById("broadcastSend");
+
+const broadcastVoiceBtn =
+    document.getElementById("broadcastVoiceBtn");
+
+const broadcastProgress =
+    document.getElementById("broadcastProgress");
+
+const progressText =
+    document.getElementById("progressText");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const toast =
+    document.getElementById("toast");
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+loginBtn.onclick =
+    loginAdmin;
+
+
+adminKey.onkeydown =
+    function(event){
+
+        if(
+            event.key === "Enter"
+        ){
+
+            event.preventDefault();
+
+            loginAdmin();
+
+        }
+
+    };
+
+
+function loginAdmin(){
+
+    const key =
+        adminKey.value.trim();
+
+
+    if(
+        key !== ADMIN_KEY
+    ){
+
+        showToast(
+            "Invalid admin key."
+        );
+
+        adminKey.value =
+            "";
+
+        adminKey.focus();
+
+        return;
+
+    }
+
+
+    adminLoggedIn =
+        true;
+
+
+    loginScreen.style.display =
+        "none";
+
+
+    app.classList.add(
+        "active"
+    );
+
+
+    loadUsers();
+
+
+    clearInterval(
+        refreshUsersTimer
+    );
+
+
+    refreshUsersTimer =
+        setInterval(
+            loadUsers,
+            5000
+        );
+
+
+    clearInterval(
+        refreshMessagesTimer
+    );
+
+
+    refreshMessagesTimer =
+        setInterval(
+            function(){
+
+                if(
+                    selectedUser
+                ){
+
+                    loadMessages();
+
+                }
+
+            },
+            4000
+        );
+
+}
+
+
+/* =========================================================
+   LOAD USERS
+========================================================= */
+
+function loadUsers(){
+
+    if(!adminLoggedIn){
+
+        return;
+
+    }
+
+
+    jsonp(
+        "users",
+        {
+            adminKey:
+                ADMIN_KEY
+        },
+        function(result){
+
+            if(
+                !result ||
+                !result.ok
+            ){
+
+                console.error(
+                    "Users error:",
+                    result
+                );
+
+                usersList.innerHTML =
+                    '<div class="noUsers">Unable to load users.</div>';
+
+                return;
+
+            }
+
+
+            users =
+                Array.isArray(
+                    result.users
+                )
+                    ? result.users
+                    : [];
+
+
+            /*
+             * Newest/most recently active users first.
+             */
+
+            users.sort(
+                function(a,b){
+
+                    return (
+                        Number(
+                            b.lastSeen || 0
+                        ) -
+                        Number(
+                            a.lastSeen || 0
+                        )
+                    );
+
+                }
+            );
+
+
+            userCount.textContent =
+                users.length;
+
+
+            renderUsers();
+
+
+            /*
+             * If a selected user still exists,
+             * update their information.
+             */
+
+            if(selectedUser){
+
+                const updated =
+                    users.find(
+                        function(user){
+
+                            return (
+                                String(
+                                    user.userId
+                                ) ===
+                                String(
+                                    selectedUser.userId
+                                )
+                            );
+
+                        }
+                    );
+
+
+                if(updated){
+
+                    selectedUser =
+                        updated;
+
+
+                    updateChatHeader();
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RENDER USERS
+========================================================= */
+
+function renderUsers(){
+
+    const search =
+        searchBox.value
+            .trim()
+            .toLowerCase();
+
+
+    usersList.innerHTML =
+        "";
+
+
+    const filtered =
+        users.filter(
+            function(user){
+
+                if(!search){
+
+                    return true;
+
+                }
+
+
+                return (
+                    String(
+                        user.name || ""
+                    )
+                    .toLowerCase()
+                    .includes(search)
+                    ||
+                    String(
+                        user.code || ""
+                    )
+                    .toLowerCase()
+                    .includes(search)
+                    ||
+                    String(
+                        user.userId || ""
+                    )
+                    .toLowerCase()
+                    .includes(search)
+                );
+
+            }
+        );
+
+
+    if(!filtered.length){
+
+        usersList.innerHTML =
+            '<div class="noUsers">No users found.</div>';
+
+        return;
+
+    }
+
+
+    filtered.forEach(
+        function(user){
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "userItem";
+
+
+            if(
+                selectedUser &&
+                String(
+                    selectedUser.userId
+                ) ===
+                String(
+                    user.userId
+                )
+            ){
+
+                button.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            const avatar =
+                document.createElement(
+                    "div"
+                );
+
+
+            avatar.className =
+                "userAvatar";
+
+
+            avatar.textContent =
+                getInitial(
+                    user.name
+                );
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+
+            info.className =
+                "userInfo";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+
+            name.className =
+                "userName";
+
+
+            name.textContent =
+                user.name ||
+                "Unknown User";
+
+
+            const code =
+                document.createElement(
+                    "div"
+                );
+
+
+            code.className =
+                "userCode";
+
+
+            code.textContent =
+                user.code ||
+                user.userId ||
+                "";
+
+
+            const lastSeen =
+                document.createElement(
+                    "div"
+                );
+
+
+            lastSeen.className =
+                "userLastSeen";
+
+
+            lastSeen.textContent =
+                user.lastSeen
+                    ? "Last seen " +
+                      formatDateTime(
+                          user.lastSeen
+                      )
+                    : "No activity";
+
+
+            info.appendChild(
+                name
+            );
+
+
+            info.appendChild(
+                code
+            );
+
+
+            info.appendChild(
+                lastSeen
+            );
+
+
+            button.appendChild(
+                avatar
+            );
+
+
+            button.appendChild(
+                info
+            );
+
+
+            button.onclick =
+                function(){
+
+                    selectUser(
+                        user
+                    );
+
+                };
+
+
+            usersList.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SELECT USER
+========================================================= */
+
+function selectUser(user){
+
+    if(!user || !user.userId){
+
+        return;
+
+    }
+
+
+    selectedUser =
+        user;
+
+
+    lastRenderedSignature =
+        "";
+
+
+    updateChatHeader();
+
+
+    renderUsers();
+
+
+    loadMessages();
+
+
+    /*
+     * Mobile:
+     * hide user list and open chat.
+     */
+
+    if(
+        window.innerWidth <= 700
+    ){
+
+        usersPanel.classList.add(
+            "mobileHidden"
+        );
+
+        chatPanel.classList.add(
+            "mobileActive"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CHAT HEADER
+========================================================= */
+
+function updateChatHeader(){
+
+    if(!selectedUser){
+
+        chatUserName.textContent =
+            "Select a user";
+
+        chatUserCode.textContent =
+            "Choose a conversation";
+
+        chatAvatar.textContent =
+            "K";
+
+        return;
+
+    }
+
+
+    chatUserName.textContent =
+        selectedUser.name ||
+        "User";
+
+
+    chatUserCode.textContent =
+        selectedUser.code ||
+        selectedUser.userId ||
+        "";
+
+
+    chatAvatar.textContent =
+        getInitial(
+            selectedUser.name
+        );
+
+
+    messageInput.placeholder =
+        "Message " +
+        (
+            selectedUser.name ||
+            "user"
+        ) +
+        "...";
+
+}
+
+
+/* =========================================================
+   LOAD MESSAGES
+========================================================= */
+
+function loadMessages(){
+
+    if(
+        !adminLoggedIn ||
+        !selectedUser ||
+        !selectedUser.userId
+    ){
+
+        return;
+
+    }
+
+
+    jsonp(
+        "messages",
+        {
+            adminKey:
+                ADMIN_KEY,
+
+            userId:
+                selectedUser.userId
+        },
+        function(result){
+
+            if(
+                !result ||
+                !result.ok
+            ){
+
+                console.error(
+                    "Message read error:",
+                    result
+                );
+
+                return;
+
+            }
+
+
+            renderMessages(
+                result.messages || []
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RENDER MESSAGES
+========================================================= */
+
+function renderMessages(list){
+
+    list =
+        Array.isArray(list)
+            ? list
+            : [];
+
+
+    list.sort(
+        function(a,b){
+
+            return (
+                Number(
+                    a.timestamp || 0
+                ) -
+                Number(
+                    b.timestamp || 0
+                )
+            );
+
+        }
+    );
+
+
+    const signature =
+        list.map(
+            function(m){
+
+                return (
+                    String(
+                        m.id || ""
+                    ) +
+                    "|" +
+                    String(
+                        m.timestamp || ""
+                    ) +
+                    "|" +
+                    String(
+                        m.sender || ""
+                    ) +
+                    "|" +
+                    String(
+                        m.text || ""
+                    ) +
+                    "|" +
+                    String(
+                        m.mediaUrl || ""
+                    )
+                );
+
+            }
+        ).join(",");
+
+
+    if(
+        signature ===
+        lastRenderedSignature
+    ){
+
+        return;
+
+    }
+
+
+    lastRenderedSignature =
+        signature;
+
+
+    messages.innerHTML =
+        "";
+
+
+    if(!list.length){
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+
+        empty.className =
+            "emptyChat";
+
+
+        empty.innerHTML =
+            `
+            <div>
+                <div class="emptyIcon">💬</div>
+                No messages yet.<br>
+                Send a message to this user.
+            </div>
+            `;
+
+
+        messages.appendChild(
+            empty
+        );
+
+
+        return;
+
+    }
+
+
+    list.forEach(
+        function(message){
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            /*
+             * Admin messages are on the RIGHT.
+             * User messages are on the LEFT.
+             */
+
+            row.className =
+                "messageRow " +
+                (
+                    message.sender ===
+                    "admin"
+                        ? "admin"
+                        : "user"
+                );
+
+
+            const bubble =
+                document.createElement(
+                    "div"
+                );
+
+
+            bubble.className =
+                "messageBubble";
+
+
+            if(
+                message.sender ===
+                "admin"
+            ){
+
+                const sender =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                sender.className =
+                    "senderName";
+
+
+                sender.textContent =
+                    "KULZZY RADIO";
+
+
+                bubble.appendChild(
+                    sender
+                );
+
+            }
+            else{
+
+                const sender =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                sender.className =
+                    "senderName";
+
+
+                sender.textContent =
+                    message.senderName ||
+                    selectedUser.name ||
+                    "USER";
+
+
+                bubble.appendChild(
+                    sender
+                );
+
+            }
+
+
+            if(message.text){
+
+                const text =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                text.className =
+                    "messageText";
+
+
+                text.textContent =
+                    message.text;
+
+
+                bubble.appendChild(
+                    text
+                );
+
+            }
+
+
+            if(
+                message.mediaUrl &&
+                message.type ===
+                "image"
+            ){
+
+                const image =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                image.src =
+                    message.mediaUrl;
+
+
+                image.alt =
+                    "Image";
+
+
+                image.loading =
+                    "lazy";
+
+
+                bubble.appendChild(
+                    image
+                );
+
+            }
+
+
+            if(
+                message.mediaUrl &&
+                message.type ===
+                "video"
+            ){
+
+                const video =
+                    document.createElement(
+                        "video"
+                    );
+
+
+                video.src =
+                    message.mediaUrl;
+
+
+                video.controls =
+                    true;
+
+
+                video.preload =
+                    "metadata";
+
+
+                bubble.appendChild(
+                    video
+                );
+
+            }
+
+
+            if(
+                message.mediaUrl &&
+                message.type ===
+                "audio"
+            ){
+
+                const audio =
+                    document.createElement(
+                        "audio"
+                    );
+
+
+                audio.src =
+                    message.mediaUrl;
+
+
+                audio.controls =
+                    true;
+
+
+                audio.preload =
+                    "metadata";
+
+
+                bubble.appendChild(
+                    audio
+                );
+
+            }
+
+
+            const time =
+                document.createElement(
+                    "div"
+                );
+
+
+            time.className =
+                "messageTime";
+
+
+            time.textContent =
+                formatTime(
+                    message.timestamp
+                );
+
+
+            bubble.appendChild(
+                time
+            );
+
+
+            row.appendChild(
+                bubble
+            );
+
+
+            messages.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+    /*
+     * Keep the newest message visible.
+     */
+
+    requestAnimationFrame(
+        function(){
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+sendBtn.onclick =
+    sendMessage;
+
+
+messageInput.onkeydown =
+    function(event){
+
+        if(
+            event.key === "Enter" &&
+            !event.shiftKey
+        ){
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    };
+
+
+async function sendMessage(){
+
+    if(
+        !adminLoggedIn ||
+        !selectedUser ||
+        !selectedUser.userId
+    ){
+
+        showToast(
+            "Select a user first."
+        );
+
+        return;
+
+    }
+
+
+    if(mediaRecorder){
+
+        await stopRecording();
+
+        return;
+
+    }
+
+
+    const text =
+        messageInput.value.trim();
+
+
+    if(
+        !text &&
+        !selectedFile
+    ){
+
+        return;
+
+    }
+
+
+    sendBtn.disabled =
+        true;
+
+
+    try{
+
+        let mediaUrl =
+            "";
+
+        let type =
+            "text";
+
+
+        if(selectedFile){
+
+            showToast(
+                "Uploading media..."
+            );
+
+
+            mediaUrl =
+                await uploadToCloudinary(
+                    selectedFile
+                );
+
+
+            type =
+                getMediaType(
+                    selectedFile.type
+                );
+
+        }
+
+
+        const result =
+            await postData({
+
+                action:
+                    "sendAdminMessage",
+
+                adminKey:
+                    ADMIN_KEY,
+
+                userId:
+                    selectedUser.userId,
+
+                sender:
+                    "admin",
+
+                senderName:
+                    "KULZZY RADIO",
+
+                type:
+                    type,
+
+                text:
+                    text,
+
+                mediaUrl:
+                    mediaUrl
+
+            });
+
+
+        if(
+            !result ||
+            result.ok === false
+        ){
+
+            throw new Error(
+                result.error ||
+                "Message send failed."
+            );
+
+        }
+
+
+        messageInput.value =
+            "";
+
+
+        messageInput.style.height =
+            "43px";
+
+
+        clearSelectedFile();
+
+
+        lastRenderedSignature =
+            "";
+
+
+        setTimeout(
+            loadMessages,
+            700
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Message could not be sent."
+        );
+
+    }
+
+
+    sendBtn.disabled =
+        false;
+
+}
+
+
+/* =========================================================
+   ATTACHMENT
+========================================================= */
+
+attachBtn.onclick =
+    function(){
+
+        if(!selectedUser){
+
+            showToast(
+                "Select a user first."
+            );
+
+            return;
+
+        }
+
+
+        fileInput.click();
+
+    };
+
+
+fileInput.onchange =
+    function(){
+
+        if(
+            !fileInput.files ||
+            !fileInput.files[0]
+        ){
+
+            return;
+
+        }
+
+
+        selectedFile =
+            fileInput.files[0];
+
+
+        previewName.textContent =
+            selectedFile.name;
+
+
+        attachPreview.classList.add(
+            "active"
+        );
+
+    };
+
+
+removeFile.onclick =
+    clearSelectedFile;
+
+
+function clearSelectedFile(){
+
+    selectedFile =
+        null;
+
+
+    fileInput.value =
+        "";
+
+
+    previewName.textContent =
+        "";
+
+
+    attachPreview.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   VOICE RECORDING
+========================================================= */
+
+voiceBtn.onclick =
+    toggleRecording;
+
+
+async function toggleRecording(){
+
+    if(mediaRecorder){
+
+        await stopRecording();
+
+        return;
+
+    }
+
+
+    if(!selectedUser){
+
+        showToast(
+            "Select a user first."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia ||
+        typeof MediaRecorder ===
+        "undefined"
+    ){
+
+        showToast(
+            "Voice recording is not supported here."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const stream =
+            await navigator.mediaDevices
+                .getUserMedia({
+                    audio:true
+                });
+
+
+        recordedChunks =
+            [];
+
+
+        let mimeType =
+            "";
+
+
+        const choices = [
+
+            "audio/webm;codecs=opus",
+
+            "audio/webm",
+
+            "audio/mp4",
+
+            "audio/ogg;codecs=opus"
+
+        ];
+
+
+        for(
+            let i = 0;
+            i < choices.length;
+            i++
+        ){
+
+            if(
+                MediaRecorder.isTypeSupported(
+                    choices[i]
+                )
+            ){
+
+                mimeType =
+                    choices[i];
+
+                break;
+
+            }
+
+        }
+
+
+        mediaRecorder =
+            mimeType
+                ? new MediaRecorder(
+                    stream,
+                    {
+                        mimeType:
+                            mimeType
+                    }
+                  )
+                : new MediaRecorder(
+                    stream
+                  );
+
+
+        mediaRecorder.ondataavailable =
+            function(event){
+
+                if(
+                    event.data &&
+                    event.data.size
+                ){
+
+                    recordedChunks.push(
+                        event.data
+                    );
+
+                }
+
+            };
+
+
+        mediaRecorder.onstop =
+            async function(){
+
+                stream
+                    .getTracks()
+                    .forEach(
+                        function(track){
+
+                            track.stop();
+
+                        }
+                    );
+
+
+                const blob =
+                    new Blob(
+                        recordedChunks,
+                        {
+                            type:
+                                mimeType ||
+                                "audio/webm"
+                        }
+                    );
+
+
+                mediaRecorder =
+                    null;
+
+
+                recordingBar.classList.remove(
+                    "active"
+                );
+
+
+                clearInterval(
+                    recordingTimer
+                );
+
+
+                recordTime.textContent =
+                    "0:00";
+
+
+                if(!blob.size){
+
+                    return;
+
+                }
+
+
+                sendBtn.disabled =
+                    true;
+
+
+                try{
+
+                    showToast(
+                        "Uploading voice note..."
+                    );
+
+
+                    const file =
+                        new File(
+                            [blob],
+                            "voice-note." +
+                            getAudioExtension(
+                                blob.type
+                            ),
+                            {
+                                type:
+                                    blob.type
+                            }
+                        );
+
+
+                    const url =
+                        await uploadToCloudinary(
+                            file
+                        );
+
+
+                    const result =
+                        await postData({
+
+                            action:
+                                "sendAdminMessage",
+
+                            adminKey:
+                                ADMIN_KEY,
+
+                            userId:
+                                selectedUser.userId,
+
+                            sender:
+                                "admin",
+
+                            senderName:
+                                "KULZZY RADIO",
+
+                            type:
+                                "audio",
+
+                            text:
+                                "",
+
+                            mediaUrl:
+                                url
+
+                        });
+
+
+                    if(
+                        !result ||
+                        result.ok === false
+                    ){
+
+                        throw new Error(
+                            result.error ||
+                            "Voice message failed."
+                        );
+
+                    }
+
+
+                    lastRenderedSignature =
+                        "";
+
+
+                    setTimeout(
+                        loadMessages,
+                        700
+                    );
+
+
+                }catch(error){
+
+                    console.error(error);
+
+                    showToast(
+                        "Voice note could not be sent."
+                    );
+
+                }
+
+
+                sendBtn.disabled =
+                    false;
+
+            };
+
+
+        mediaRecorder.start();
+
+
+        recordingStartedAt =
+            Date.now();
+
+
+        recordingBar.classList.add(
+            "active"
+        );
+
+
+        recordingTimer =
+            setInterval(
+                updateRecordingTime,
+                500
+            );
+
+
+        showToast(
+            "Recording... tap microphone again to stop."
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Microphone permission was denied."
+        );
+
+    }
+
+}
+
+
+async function stopRecording(){
+
+    if(
+        mediaRecorder &&
+        mediaRecorder.state !==
+        "inactive"
+    ){
+
+        mediaRecorder.stop();
+
+    }
+
+}
+
+
+/* =========================================================
+   RECORDING TIMER
+========================================================= */
+
+function updateRecordingTime(){
+
+    const seconds =
+        Math.floor(
+            (
+                Date.now() -
+                recordingStartedAt
+            ) / 1000
+        );
+
+
+    const mins =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    const secs =
+        seconds % 60;
+
+
+    recordTime.textContent =
+        mins +
+        ":" +
+        String(
+            secs
+        ).padStart(
+            2,
+            "0"
+        );
+
+}
+
+
+/* =========================================================
+   CLOUDINARY
+========================================================= */
+
+async function uploadToCloudinary(file){
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "upload_preset",
+        CLOUDINARY_UPLOAD_PRESET
+    );
+
+
+    const response =
+        await fetch(
+            CLOUDINARY_UPLOAD_URL,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "Cloudinary upload failed."
+        );
+
+    }
+
+
+    const result =
+        await response.json();
+
+
+    if(!result.secure_url){
+
+        throw new Error(
+            "Cloudinary returned no URL."
+        );
+
+    }
+
+
+    return result.secure_url;
+
+}
+
+
+/* =========================================================
+   MEDIA TYPE
+========================================================= */
+
+function getMediaType(mime){
+
+    mime =
+        String(
+            mime || ""
+        ).toLowerCase();
+
+
+    if(
+        mime.indexOf(
+            "image/"
+        ) === 0
+    ){
+
+        return "image";
+
+    }
+
+
+    if(
+        mime.indexOf(
+            "video/"
+        ) === 0
+    ){
+
+        return "video";
+
+    }
+
+
+    return "text";
+
+}
+
+
+/* =========================================================
+   AUDIO EXTENSION
+========================================================= */
+
+function getAudioExtension(type){
+
+    type =
+        String(
+            type || ""
+        ).toLowerCase();
+
+
+    if(
+        type.indexOf(
+            "mp4"
+        ) !== -1
+    ){
+
+        return "mp4";
+
+    }
+
+
+    if(
+        type.indexOf(
+            "ogg"
+        ) !== -1
+    ){
+
+        return "ogg";
+
+    }
+
+
+    return "webm";
+
+}
+
+
+/* =========================================================
+   BROADCAST OPEN
+========================================================= */
+
+broadcastBtn.onclick =
+    function(){
+
+        broadcastOverlay.classList.add(
+            "active"
+        );
+
+
+        setTimeout(
+            function(){
+
+                broadcastInput.focus();
+
+            },
+            100
+        );
+
+    };
+
+
+closeBroadcast.onclick =
+    closeBroadcastWindow;
+
+
+broadcastCancel.onclick =
+    closeBroadcastWindow;
+
+
+function closeBroadcastWindow(){
+
+    if(
+        broadcastProgress.classList.contains(
+            "active"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    broadcastOverlay.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   BROADCAST FILE
+========================================================= */
+
+broadcastFileBtn.onclick =
+    function(){
+
+        broadcastFileInput.click();
+
+    };
+
+
+broadcastFileInput.onchange =
+    function(){
+
+        if(
+            !broadcastFileInput.files ||
+            !broadcastFileInput.files[0]
+        ){
+
+            return;
+
+        }
+
+
+        broadcastFile =
+            broadcastFileInput.files[0];
+
+
+        broadcastFileName.textContent =
+            broadcastFile.name;
+
+
+        broadcastFilePreview.classList.add(
+            "active"
+        );
+
+    };
+
+
+broadcastRemoveFile.onclick =
+    clearBroadcastFile;
+
+
+function clearBroadcastFile(){
+
+    broadcastFile =
+        null;
+
+
+    broadcastFileInput.value =
+        "";
+
+
+    broadcastFileName.textContent =
+        "";
+
+
+    broadcastFilePreview.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   BROADCAST
+========================================================= */
+
+broadcastSend.onclick =
+    sendBroadcast;
+
+
+async function sendBroadcast(){
+
+    if(!adminLoggedIn){
+
+        return;
+
+    }
+
+
+    const text =
+        broadcastInput.value.trim();
+
+
+    if(
+        !text &&
+        !broadcastFile
+    ){
+
+        showToast(
+            "Enter a message or attach media."
+        );
+
+        return;
+
+    }
+
+
+    if(!users.length){
+
+        showToast(
+            "There are no registered users."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Send this broadcast to " +
+            users.length +
+            " user(s)?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    broadcastSend.disabled =
+        true;
+
+
+    broadcastCancel.disabled =
+        true;
+
+
+    broadcastProgress.classList.add(
+        "active"
+    );
+
+
+    progressBar.style.width =
+        "0%";
+
+
+    try{
+
+        let mediaUrl =
+            "";
+
+        let type =
+            "text";
+
+
+        /*
+         * Upload the broadcast media only once.
+         */
+
+        if(broadcastFile){
+
+            progressText.textContent =
+                "Uploading broadcast media...";
+
+
+            mediaUrl =
+                await uploadToCloudinary(
+                    broadcastFile
+                );
+
+
+            type =
+                getMediaType(
+                    broadcastFile.type
+                );
+
+        }
+
+
+        /*
+         * Send the same broadcast as an
+         * admin message to every user.
+         *
+         * There is intentionally no fixed
+         * user limit here.
+         */
+
+        let successful =
+            0;
+
+        let failed =
+            0;
+
+
+        for(
+            let i = 0;
+            i < users.length;
+            i++
+        ){
+
+            const user =
+                users[i];
+
+
+            progressText.textContent =
+                "Sending to " +
+                (
+                    i + 1
+                ) +
+                " of " +
+                users.length +
+                ": " +
+                (
+                    user.name ||
+                    "User"
+                );
+
+
+            const percent =
+                Math.round(
+                    (
+                        i /
+                        users.length
+                    ) * 100
+                );
+
+
+            progressBar.style.width =
+                percent + "%";
+
+
+            try{
+
+                const result =
+                    await postData({
+
+                        action:
+                            "sendAdminMessage",
+
+                        adminKey:
+                            ADMIN_KEY,
+
+                        userId:
+                            user.userId,
+
+                        sender:
+                            "admin",
+
+                        senderName:
+                            "KULZZY RADIO",
+
+                        type:
+                            type,
+
+                        text:
+                            text,
+
+                        mediaUrl:
+                            mediaUrl
+
+                    });
+
+
+                if(
+                    result &&
+                    result.ok !== false
+                ){
+
+                    successful++;
+
+                }
+                else{
+
+                    failed++;
+
+                }
+
+            }catch(error){
+
+                console.error(
+                    "Broadcast failed for:",
+                    user,
+                    error
+                );
+
+                failed++;
+
+            }
+
+        }
+
+
+        progressBar.style.width =
+            "100%";
+
+
+        progressText.textContent =
+            "Broadcast complete. " +
+            successful +
+            " sent, " +
+            failed +
+            " failed.";
+
+
+        /*
+         * Clear broadcast composer.
+         */
+
+        broadcastInput.value =
+            "";
+
+
+        clearBroadcastFile();
+
+
+        showToast(
+            "Broadcast sent to " +
+            successful +
+            " user(s)."
+        );
+
+
+        /*
+         * Keep progress visible briefly.
+         */
+
+        setTimeout(
+            function(){
+
+                broadcastProgress.classList.remove(
+                    "active"
+                );
+
+
+                broadcastOverlay.classList.remove(
+                    "active"
+                );
+
+            },
+            1800
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        progressText.textContent =
+            "Broadcast failed.";
+
+
+        showToast(
+            "Broadcast could not be completed."
+        );
+
+    }
+
+
+    broadcastSend.disabled =
+        false;
+
+
+    broadcastCancel.disabled =
+        false;
+
+}
+
+
+/* =========================================================
+   BROADCAST VOICE NOTE
+========================================================= */
+
+broadcastVoiceBtn.onclick =
+    recordBroadcastVoice;
+
+
+async function recordBroadcastVoice(){
+
+    if(broadcastRecording){
+
+        return;
+
+    }
+
+
+    if(
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia ||
+        typeof MediaRecorder ===
+        "undefined"
+    ){
+
+        showToast(
+            "Voice recording is not supported here."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const stream =
+            await navigator.mediaDevices
+                .getUserMedia({
+                    audio:true
+                });
+
+
+        let chunks = [];
+
+
+        let mimeType =
+            "";
+
+
+        const choices = [
+
+            "audio/webm;codecs=opus",
+
+            "audio/webm",
+
+            "audio/mp4",
+
+            "audio/ogg;codecs=opus"
+
+        ];
+
+
+        for(
+            let i = 0;
+            i < choices.length;
+            i++
+        ){
+
+            if(
+                MediaRecorder.isTypeSupported(
+                    choices[i]
+                )
+            ){
+
+                mimeType =
+                    choices[i];
+
+                break;
+
+            }
+
+        }
+
+
+        const recorder =
+            mimeType
+                ? new MediaRecorder(
+                    stream,
+                    {
+                        mimeType:
+                            mimeType
+                    }
+                  )
+                : new MediaRecorder(
+                    stream
+                  );
+
+
+        broadcastRecording =
+            true;
+
+
+        broadcastVoiceBtn.textContent =
+            "🔴 Recording... Tap Again";
+
+
+        recorder.ondataavailable =
+            function(event){
+
+                if(
+                    event.data &&
+                    event.data.size
+                ){
+
+                    chunks.push(
+                        event.data
+                    );
+
+                }
+
+            };
+
+
+        recorder.onstop =
+            async function(){
+
+                stream
+                    .getTracks()
+                    .forEach(
+                        function(track){
+
+                            track.stop();
+
+                        }
+                    );
+
+
+                broadcastRecording =
+                    false;
+
+
+                broadcastVoiceBtn.textContent =
+                    "🎤 Voice Note";
+
+
+                const blob =
+                    new Blob(
+                        chunks,
+                        {
+                            type:
+                                mimeType ||
+                                "audio/webm"
+                        }
+                    );
+
+
+                if(!blob.size){
+
+                    return;
+
+                }
+
+
+                try{
+
+                    showToast(
+                        "Uploading broadcast voice note..."
+                    );
+
+
+                    const file =
+                        new File(
+                            [blob],
+                            "broadcast-voice-note." +
+                            getAudioExtension(
+                                blob.type
+                            ),
+                            {
+                                type:
+                                    blob.type
+                            }
+                        );
+
+
+                    broadcastFile =
+                        file;
+
+
+                    broadcastFileName.textContent =
+                        file.name;
+
+
+                    broadcastFilePreview.classList.add(
+                        "active"
+                    );
+
+
+                    /*
+                     * The broadcast sender currently
+                     * supports image/video as an
+                     * attachment through the UI.
+                     *
+                     * The recorded file itself is
+                     * retained and upload happens
+                     * when SEND TO ALL USERS is pressed.
+                     */
+
+                }catch(error){
+
+                    console.error(error);
+
+                    showToast(
+                        "Broadcast voice note failed."
+                    );
+
+                }
+
+            };
+
+
+        recorder.start();
+
+
+        showToast(
+            "Recording broadcast voice note. Tap the button again to stop."
+        );
+
+
+        /*
+         * Replace the click handler temporarily
+         * while recording.
+         */
+
+        broadcastVoiceBtn.onclick =
+            function(){
+
+                if(
+                    recorder.state !==
+                    "inactive"
+                ){
+
+                    recorder.stop();
+
+                }
+
+                broadcastVoiceBtn.onclick =
+                    recordBroadcastVoice;
+
+            };
+
+
+    }catch(error){
+
+        console.error(error);
+
+        broadcastRecording =
+            false;
+
+
+        broadcastVoiceBtn.textContent =
+            "🎤 Voice Note";
+
+
+        showToast(
+            "Microphone permission was denied."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   JSONP
+========================================================= */
+
+function jsonp(
+    action,
+    params,
+    callback
+){
+
+    const callbackName =
+        "kulzzyAdminCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(
+            Math.random() * 100000
+        );
+
+
+    const script =
+        document.createElement(
+            "script"
+        );
+
+
+    const query = {
+
+        action:
+            action,
+
+        callback:
+            callbackName
+
+    };
+
+
+    Object.keys(
+        params || {}
+    ).forEach(
+        function(key){
+
+            query[key] =
+                params[key];
+
+        }
+    );
+
+
+    const queryString =
+        Object.keys(query)
+            .map(
+                function(key){
+
+                    return (
+                        encodeURIComponent(
+                            key
+                        ) +
+                        "=" +
+                        encodeURIComponent(
+                            query[key]
+                        )
+                    );
+
+                }
+            )
+            .join("&");
+
+
+    let finished =
+        false;
+
+
+    function cleanup(){
+
+        if(finished){
+
+            return;
+
+        }
+
+
+        finished =
+            true;
+
+
+        try{
+
+            delete window[
+                callbackName
+            ];
+
+        }catch(e){}
+
+
+        try{
+
+            script.remove();
+
+        }catch(e){}
+
+    }
+
+
+    window[callbackName] =
+        function(data){
+
+            cleanup();
+
+            callback(data);
+
+        };
+
+
+    script.onerror =
+        function(){
+
+            cleanup();
+
+
+            callback({
+
+                ok:false,
+
+                error:
+                    "Unable to connect to chat server."
+
+            });
+
+        };
+
+
+    script.src =
+        API_URL +
+        (
+            API_URL.indexOf("?") >= 0
+                ? "&"
+                : "?"
+        ) +
+        queryString;
+
+
+    document.body.appendChild(
+        script
+    );
+
+
+    setTimeout(
+        function(){
+
+            if(finished){
+
+                return;
+
+            }
+
+
+            cleanup();
+
+
+            callback({
+
+                ok:false,
+
+                error:
+                    "Chat server did not respond."
+
+            });
+
+        },
+        15000
+    );
+
+}
+
+
+/* =========================================================
+   POST
+========================================================= */
+
+function postData(data){
+
+    return new Promise(
+        function(resolve,reject){
+
+            const iframe =
+                document.createElement(
+                    "iframe"
+                );
+
+
+            iframe.name =
+                "kulzzyAdminPost_" +
+                Date.now() +
+                "_" +
+                Math.floor(
+                    Math.random() * 100000
+                );
+
+
+            iframe.style.display =
+                "none";
+
+
+            document.body.appendChild(
+                iframe
+            );
+
+
+            const form =
+                document.createElement(
+                    "form"
+                );
+
+
+            form.method =
+                "POST";
+
+
+            form.action =
+                API_URL;
+
+
+            form.target =
+                iframe.name;
+
+
+            form.style.display =
+                "none";
+
+
+            Object.keys(data).forEach(
+                function(key){
+
+                    const input =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    input.type =
+                        "hidden";
+
+
+                    input.name =
+                        key;
+
+
+                    input.value =
+                        data[key] == null
+                            ? ""
+                            : String(
+                                data[key]
+                              );
+
+
+                    form.appendChild(
+                        input
+                    );
+
+                }
+            );
+
+
+            document.body.appendChild(
+                form
+            );
+
+
+            let finished =
+                false;
+
+
+            function finish(){
+
+                if(finished){
+
+                    return;
+
+                }
+
+
+                finished =
+                    true;
+
+
+                try{
+                    form.remove();
+                }catch(e){}
+
+
+                try{
+                    iframe.remove();
+                }catch(e){}
+
+
+                resolve({
+                    ok:true
+                });
+
+            }
+
+
+            try{
+
+                form.submit();
+
+            }catch(error){
+
+                try{
+                    form.remove();
+                }catch(e){}
+
+
+                try{
+                    iframe.remove();
+                }catch(e){}
+
+
+                reject(error);
+
+                return;
+
+            }
+
+
+            /*
+             * Apps Script POST has no reliable
+             * browser response because this is
+             * sent through a hidden iframe.
+             *
+             * Give Apps Script enough time to
+             * write the row.
+             */
+
+            setTimeout(
+                finish,
+                2200
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+searchBox.oninput =
+    function(){
+
+        renderUsers();
+
+    };
+
+
+/* =========================================================
+   REFRESH USERS
+========================================================= */
+
+refreshUsersBtn.onclick =
+    function(){
+
+        loadUsers();
+
+    };
+
+
+/* =========================================================
+   REFRESH CHAT
+========================================================= */
+
+chatRefresh.onclick =
+    function(){
+
+        lastRenderedSignature =
+            "";
+
+
+        loadMessages();
+
+    };
+
+
+/* =========================================================
+   MOBILE BACK
+========================================================= */
+
+mobileBack.onclick =
+    function(){
+
+        chatPanel.classList.remove(
+            "mobileActive"
+        );
+
+
+        usersPanel.classList.remove(
+            "mobileHidden"
+        );
+
+    };
+
+
+/* =========================================================
+   TEXTAREA AUTO SIZE
+========================================================= */
+
+messageInput.oninput =
+    function(){
+
+        this.style.height =
+            "43px";
+
+
+        this.style.height =
+            Math.min(
+                this.scrollHeight,
+                120
+            ) +
+            "px";
+
+    };
+
+
+/* =========================================================
+   INITIAL CHAT EMPTY STATE
+========================================================= */
+
+function showEmptyChat(){
+
+    messages.innerHTML =
+        `
+        <div class="emptyChat">
+            <div>
+                <div class="emptyIcon">💬</div>
+                Select a user to open
+                their private conversation.
+            </div>
+        </div>
+        `;
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+showEmptyChat();
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getInitial(name){
+
+    const value =
+        String(
+            name ||
+            "K"
+        ).trim();
+
+
+    if(!value){
+
+        return "K";
+
+    }
+
+
+    return value
+        .charAt(0)
+        .toUpperCase();
+
+}
+
+
+function formatTime(timestamp){
+
+    if(!timestamp){
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(
+            Number(timestamp)
+        );
+
+
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+
+    return date.toLocaleTimeString(
+        [],
+        {
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+function formatDateTime(timestamp){
+
+    if(!timestamp){
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(
+            Number(timestamp)
+        );
+
+
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+
+    return date.toLocaleString(
+        [],
+        {
+            month:"short",
+            day:"numeric",
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer =
+    null;
+
+
+function showToast(message){
+
+    toast.textContent =
+        message;
+
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.style.display =
+                    "none";
+
+            },
+            3500
+        );
+
+}
+
+</script>
+
+</body>
+</html>
